@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>Tic Tac Toe</title>
+    <script src="http://fb.me/react-0.12.0.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.12.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+    <link rel="stylesheet" href="t3cc.css">
+  </head>
+  <body>
+    <div id="container"></div>
+    <script type="text/jsx">
+      /**
+      * @jsx React.DOM
+      */
+        (function(){
+            var Game = React.createClass({
+
+              getInitialState: function() {
+                return {
+                  squares: [
+                  " ", " ", " ",
+                  " ", " ", " ",
+                  " ", " ", " "
+                  ]
+                };
+              },
+
+              handleClick: function(index, event) {
+
+              },
+                render: function() {
+                    return <div>
+                        <div id='game'>
+                            {this.state.squares.map(function(s,index){
+                              return <div className="square"></div>;
+                            }, this) }
+                        </div>
+                    </div>;
+                },
+                //
+            });
+            React.render(
+                <Game />,
+                document.getElementById('container')
+            );
+        })();
+    </script>
+  </body>
+</html>
