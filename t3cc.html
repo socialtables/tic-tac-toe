@@ -21,13 +21,23 @@
                   " ", " ", " ",
                   " ", " ", " ",
                   " ", " ", " "
-                  ]
+                  ],
+                  clicks: 0,
                 };
+              },
+              handleGameClick: function(event) {
+                var numClicks = this.state.clicks +=1;
+                var playedLetter = numClicks%2 ? "X" : "O";
+                this.setState({
+                  clicks: numClicks,
+                });
+                // console.log(numClicks);
+                // console.log(playedLetter);
               },
                 render: function() {
                     return <div>
                         <div id='game' onClick={this.handleGameClick}>
-                            {this.state.squares.map(function(s,index){
+                            {this.state.squares.map(function(){
                               return <Square />
                             }, this) }
                         </div>
@@ -38,22 +48,19 @@
             var Square = React.createClass({
               getInitialState: function() {
                 return {played: false,
-                  clicks: 0,
                   letter: " "
                 };
               },
               handleClick: function(event) {
-                this.setState({played: !this.state.played});
-                var numClicks = this.state.clicks +=1;
-                var playedLetter = numClicks%2 ? "X" : "O";
-                this.setState({
-                  clicks: numClicks,
-                  letter: playedLetter
-                });
+                if(this.state.played === false) {
+                  this.setState({played: !this.state.played,
+                  });
+                }
+                // console.log(this.state.played);
               },
               render: function() {
                 return (
-                  <div onClick={this.handleClick} className="square">{this.state.letter}</div>
+                  <div onClick={this.handleClick} className="square"></div>
                   );
               }
             })
