@@ -36,8 +36,17 @@
                 },
             });
             var Square = React.createClass({
+              getInitialState: function() {
+                return {played: false};
+              },
+              handleClick: function(event, index) {
+                this.setState({played: !this.state.played});
+                console.log(index);
+              },
               render: function() {
-                return <div className="square"></div>;
+                return (
+                  <div onClick={this.handleClick} className="square"></div>
+                  );
               }
             })
             React.render(
