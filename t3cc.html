@@ -26,7 +26,7 @@
               },
                 render: function() {
                     return <div>
-                        <div id='game'>
+                        <div id='game' onClick={this.handleGameClick}>
                             {this.state.squares.map(function(s,index){
                               return <Square />
                             }, this) }
@@ -37,15 +37,23 @@
             });
             var Square = React.createClass({
               getInitialState: function() {
-                return {played: false};
+                return {played: false,
+                  clicks: 0,
+                  letter: " "
+                };
               },
-              handleClick: function(event, index) {
+              handleClick: function(event) {
                 this.setState({played: !this.state.played});
-                console.log(index);
+                var numClicks = this.state.clicks +=1;
+                var playedLetter = numClicks%2 ? "X" : "O";
+                this.setState({
+                  clicks: numClicks,
+                  letter: playedLetter
+                });
               },
               render: function() {
                 return (
-                  <div onClick={this.handleClick} className="square"></div>
+                  <div onClick={this.handleClick} className="square">{this.state.letter}</div>
                   );
               }
             })
