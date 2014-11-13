@@ -28,13 +28,18 @@
                     return <div>
                         <div id='game'>
                             {this.state.squares.map(function(s,index){
-                              return <div className="square"></div>;
+                              return <Square />
                             }, this) }
                         </div>
                     <button onClick={this.props.resetAction}>New Game</button>
                     </div>;
                 },
             });
+            var Square = React.createClass({
+              render: function() {
+                return <div className="square"></div>;
+              }
+            })
             React.render(
                 <Game />,
                 document.getElementById('container')
