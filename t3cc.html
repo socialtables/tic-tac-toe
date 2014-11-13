@@ -23,16 +23,16 @@
                   " ", " ", " "
                   ],
                   clicks: 0,
+                  letter: "O"
                 };
               },
-              handleGameClick: function(event) {
+              handleGameClick: function(squarePlayed, index) {
                 var numClicks = this.state.clicks +=1;
                 var playedLetter = numClicks%2 ? "X" : "O";
                 this.setState({
                   clicks: numClicks,
+                  letter: playedLetter
                 });
-                // console.log(numClicks);
-                // console.log(playedLetter);
               },
               reset: function() {
                 this.setState(this.getInitialState());
@@ -40,8 +40,8 @@
                 render: function() {
                     return <div>
                         <div id='game' onClick={this.handleGameClick}>
-                            {this.state.squares.map(function(){
-                              return <Square />
+                            {this.state.squares.map(function(squarePlayed, index){
+                              return <Square key={index} letter={this.state.letter} onClick={this.handleGameClick} />
                             }, this) }
                         </div>
                     <button onClick={this.reset}>New Game</button>
@@ -59,11 +59,10 @@
                   this.setState({played: !this.state.played,
                   });
                 }
-                // console.log(this.state.played);
               },
               render: function() {
                 return (
-                  <div onClick={this.handleClick} className="square"></div>
+                  <div onClick={this.handleClick} className="square">{this.props.letter}</div>
                   );
               }
             })
