@@ -23,15 +23,15 @@
                   " ", " ", " "
                   ],
                   clicks: 0,
-                  letter: "O"
+                  letter: " "
                 };
               },
-              handleGameClick: function(squarePlayed, index) {
+              handleGameClick: function(position, letter) {
                 var numClicks = this.state.clicks +=1;
-                var playedLetter = numClicks%2 ? "X" : "O";
+                var playedLetter = numClicks%2 ? "O" : "X";
                 this.setState({
                   clicks: numClicks,
-                  letter: playedLetter
+                  letter: playedLetter,
                 });
               },
               reset: function() {
@@ -39,9 +39,9 @@
               },
                 render: function() {
                     return <div>
-                        <div id='game' onClick={this.handleGameClick}>
-                            {this.state.squares.map(function(squarePlayed, index){
-                              return <Square key={index} letter={this.state.letter} onClick={this.handleGameClick} />
+                        <div id='game'>
+                            {this.state.squares.map(function(square,position){
+                              return <Square status={square} key={position} letter={this.state.letter} handleGameClick={this.handleGameClick} />
                             }, this) }
                         </div>
                     <button onClick={this.reset}>New Game</button>
@@ -51,12 +51,14 @@
             var Square = React.createClass({
               getInitialState: function() {
                 return {played: false,
-                  letter: " "
+                  letter: this.props.letter
                 };
               },
-              handleClick: function(event) {
+              handleClick: function() {
                 if(this.state.played === false) {
+                  this.props.handleGameClick(this.props.key, this.props.letter);
                   this.setState({played: !this.state.played,
+                    letter: this.props.letter
                   });
                 }
               },
