@@ -34,6 +34,9 @@
                 // console.log(numClicks);
                 // console.log(playedLetter);
               },
+              reset: function() {
+                this.setState(this.getInitialState());
+              },
                 render: function() {
                     return <div>
                         <div id='game' onClick={this.handleGameClick}>
@@ -41,7 +44,7 @@
                               return <Square />
                             }, this) }
                         </div>
-                    <button onClick={this.props.resetAction}>New Game</button>
+                    <button onClick={this.reset}>New Game</button>
                     </div>;
                 },
             });
