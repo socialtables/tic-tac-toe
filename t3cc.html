@@ -25,26 +25,43 @@
                   clicks: 0,
                 };
               },
+
               handleGameClick: function(position) {
                 var numClicks = this.state.clicks +=1;
                 this.setState({
                   clicks: numClicks
                 });
               },
+
               reset: function() {
                 this.setState(this.getInitialState());
               },
-                render: function() {
-                    return <div>
-                        <div id='game'>
-                            {this.state.squares.map(function(letter,position){
-                              return <Square status={letter} key={position} position={this.state.squares[position]} numClicks={this.state.clicks} handleGameClick={this.handleGameClick} />
-                            }, this) }
-                        </div>
-                    <button onClick={this.reset}>New Game</button>
-                    </div>;
-                },
-            });
+
+              checkWin: function() {
+                var s = this.state.squares;
+                if(s[0] && s[1] && s[2] === "X" || s[0] && s[1] && s[2] === "O"){ console.log('y')}
+                if(s[3] && s[4] && s[5] === "X" || s[3] && s[4] && s[5] === "O"){ console.log('y')}
+                if(s[6] && s[7] && s[8] === "X" || s[6] && s[7] && s[8] === "O"){ console.log('y')}
+
+                if(s[0] && s[3] && s[6] === "X" || s[0] && s[3] && s[6] === "O"){ console.log('y')}
+                if(s[1] && s[4] && s[7] === "X" || s[1] && s[4] && s[7] === "O"){ console.log('y')}
+                if(s[2] && s[5] && s[8] === "X" || s[2] && s[5] && s[8] === "O"){ console.log('y')}
+
+                if(s[0] && s[4] && s[8] === "X" || s[0] && s[4] && s[8] === "O"){ console.log('y')}
+                if(s[2] && s[4] && s[6] === "X" || s[2] && s[4] && s[6] === "O"){ console.log('y')}
+              },
+
+              render: function() {
+                  return <div>
+                      <div id='game'>
+                          {this.state.squares.map(function(letter,position){
+                            return <Square status={letter} key={position} position={this.state.squares[position]} numClicks={this.state.clicks} handleGameClick={this.handleGameClick} />
+                          }, this) }
+                      </div>
+                  <button onClick={this.reset}>New Game</button>
+                  </div>;
+              },
+          });
             var Square = React.createClass({
               getInitialState: function() {
                 return {played: false,
