@@ -23,15 +23,12 @@
                   " ", " ", " "
                   ],
                   clicks: 0,
-                  letter: " "
                 };
               },
-              handleGameClick: function(position, letter) {
+              handleGameClick: function(position) {
                 var numClicks = this.state.clicks +=1;
-                var playedLetter = numClicks%2 ? "O" : "X";
                 this.setState({
-                  clicks: numClicks,
-                  letter: playedLetter,
+                  clicks: numClicks
                 });
               },
               reset: function() {
@@ -40,8 +37,8 @@
                 render: function() {
                     return <div>
                         <div id='game'>
-                            {this.state.squares.map(function(square,position){
-                              return <Square status={square} key={position} letter={this.state.letter} handleGameClick={this.handleGameClick} />
+                            {this.state.squares.map(function(letter,position){
+                              return <Square status={letter} key={position} position={this.state.squares[position]} numClicks={this.state.clicks} handleGameClick={this.handleGameClick} />
                             }, this) }
                         </div>
                     <button onClick={this.reset}>New Game</button>
@@ -51,20 +48,21 @@
             var Square = React.createClass({
               getInitialState: function() {
                 return {played: false,
-                  letter: this.props.letter
+                  letter: " "
                 };
               },
               handleClick: function() {
                 if(this.state.played === false) {
-                  this.props.handleGameClick(this.props.key, this.props.letter);
+                  var letter = this.props.numClicks%2 ? "O" : "X";
+                  this.props.handleGameClick(this.props.status, this.props.position);
                   this.setState({played: !this.state.played,
-                    letter: this.props.letter
+                    letter: letter
                   });
                 }
               },
               render: function() {
                 return (
-                  <div onClick={this.handleClick} className="square">{this.props.letter}</div>
+                  <div onClick={this.handleClick} className="square">{this.state.letter}</div>
                   );
               }
             })
