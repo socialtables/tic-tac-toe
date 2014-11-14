@@ -22,11 +22,12 @@
                   " ", " ", " ",
                   " ", " ", " "
                   ],
-                  clicks: 0,
+                  clicks: 0
                 };
               },
 
               handleGameClick: function(position) {
+                this.checkWin();
                 var numClicks = this.state.clicks +=1;
                 this.setState({
                   clicks: numClicks
@@ -38,17 +39,23 @@
               },
 
               checkWin: function() {
-                var s = this.state.squares;
-                if(s[0] && s[1] && s[2] === "X" || s[0] && s[1] && s[2] === "O"){ console.log('y')}
-                if(s[3] && s[4] && s[5] === "X" || s[3] && s[4] && s[5] === "O"){ console.log('y')}
-                if(s[6] && s[7] && s[8] === "X" || s[6] && s[7] && s[8] === "O"){ console.log('y')}
-
-                if(s[0] && s[3] && s[6] === "X" || s[0] && s[3] && s[6] === "O"){ console.log('y')}
-                if(s[1] && s[4] && s[7] === "X" || s[1] && s[4] && s[7] === "O"){ console.log('y')}
-                if(s[2] && s[5] && s[8] === "X" || s[2] && s[5] && s[8] === "O"){ console.log('y')}
-
-                if(s[0] && s[4] && s[8] === "X" || s[0] && s[4] && s[8] === "O"){ console.log('y')}
-                if(s[2] && s[4] && s[6] === "X" || s[2] && s[4] && s[6] === "O"){ console.log('y')}
+                var s = // map array of each square in this.state.square's state.letter?
+                var check = function(a,b,c) {
+                  if(a === b && b === c && c == a && a === "X") {
+                    alert("X wins!");
+                  }
+                  else if(a === b && b === c && c == a && a === "O") {
+                    alert("O wins!");
+                  }
+                };
+                check(s[0], s[1], s[2])
+                check(s[3], s[4], s[5])
+                check(s[6], s[7], s[8])
+                check(s[0], s[3], s[6])
+                check(s[1], s[4], s[7])
+                check(s[2], s[5], s[8])
+                check(s[0], s[4], s[8])
+                check(s[2], s[4], s[6])
               },
 
               render: function() {
