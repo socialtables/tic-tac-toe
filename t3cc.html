@@ -39,10 +39,10 @@
 
                 var check = function(a, b, c) {
                   if(a === b && b === c && c === a && a === "X") {
-                    ($('#win_clear')).append("<p>X wins!</p>");
+                    ($('#win_clear')).append("X wins!");
                   }
                   else if(a === b && b === c && c === a && a === "O") {
-                    ($('#win_clear')).append("<p>O wins!</p>");
+                    ($('#win_clear')).append("O wins!");
                   }
                 }
                 check(s1, s2, s3);
@@ -64,7 +64,9 @@
               },
 
               reset: function() {
-                this.setState(this.getInitialState());
+                this.state.squares.forEach(function(){
+                  ($('.square').empty());
+                })
               },
 
               render: function() {
