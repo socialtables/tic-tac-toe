@@ -22,36 +22,47 @@
                   "", "", "",
                   "", "", ""
                   ],
-                  clicks: 0
+                  clicks: 0,
+                  winner: ""
                 };
               },
 
               checkWin: function() {
                 var s = this.state.squares;
-
+                function filled(element, index, array) {
+                  return element !== ""
+                }
                 var check = function(a, b, c) {
                   if(a === b && b === c && c === a && a === "X") {
-                    ($('#win_clear')).append("X wins!");
+                    console.log("X wins!");
                   }
                   else if(a === b && b === c && c === a && a === "O") {
-                    ($('#win_clear')).append("O wins!");
+                    console.log("O wins!");
                   }
+                };
+
+                if(s.every(filled)){
+                  console.log("Cat's game");
                 }
-                check(s[0], s[1], s[2]);
-                check(s[3], s[4], s[5]);
-                check(s[6], s[7], s[8]);
-                check(s[0], s[3], s[6]);
-                check(s[1], s[4], s[7]);
-                check(s[2], s[5], s[8]);
-                check(s[0], s[4], s[8]);
-                check(s[2], s[4], s[6]);
+                else {
+                  check(s[0], s[1], s[2]);
+                  check(s[3], s[4], s[5]);
+                  check(s[6], s[7], s[8]);
+                  check(s[0], s[3], s[6]);
+                  check(s[1], s[4], s[7]);
+                  check(s[2], s[5], s[8]);
+                  check(s[0], s[4], s[8]);
+                  check(s[2], s[4], s[6]);
+                }
               },
 
               handleGameClick: function(position) {
                 var numClicks = this.state.clicks +=1;
                 var grid = this.state.squares;
                 var letter = numClicks%2 ? "O" : "X"
-                grid[position] = letter;
+                if(grid[position] === ""){
+                  grid[position] = letter;
+                }
                 this.setState({
                   clicks: numClicks
                 });
@@ -68,11 +79,12 @@
                     <div id='game'>
                       {this.state.squares.map(function(square,position){
                         return (
-                          <Square status={square} key={position} numClicks={this.state.clicks} handleGameClick={this.handleGameClick} />
+                          <Square status={square} key={position} numClicks={this.state.clicks} handleGameClick={this.handleGameClick.bind(this,position)} />
                           );
                       }, this) }
                     </div>
                     <div id="win_clear">
+                      {this.winner}
                       <button onClick={this.reset}>New Game</button>
                     </div>
                   </div>
