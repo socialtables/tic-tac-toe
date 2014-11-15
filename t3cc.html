@@ -26,36 +26,45 @@
                 };
               },
 
+              checkWin: function() {
+                var s1 = ($('.square:eq(0)').html());
+                var s2 = ($('.square:eq(1)').html());
+                var s3 = ($('.square:eq(2)').html());
+                var s4 = ($('.square:eq(3)').html());
+                var s5 = ($('.square:eq(4)').html());
+                var s6 = ($('.square:eq(5)').html());
+                var s7 = ($('.square:eq(6)').html());
+                var s8 = ($('.square:eq(7)').html());
+                var s9 = ($('.square:eq(8)').html());
+
+                var check = function(a, b, c) {
+                  if(a === b && b === c && c === a && a === "X") {
+                    ($('#win_clear')).append("<p>X wins!</p>");
+                  }
+                  else if(a === b && b === c && c === a && a === "O") {
+                    ($('#win_clear')).append("<p>O wins!</p>");
+                  }
+                }
+                check(s1, s2, s3);
+                check(s4, s5, s6);
+                check(s7, s8, s9);
+                check(s1, s4, s7);
+                check(s2, s5, s8);
+                check(s3, s6, s9);
+                check(s1, s5, s9);
+                check(s3, s5, s7);
+              },
+
               handleGameClick: function(position) {
-                this.checkWin();
                 var numClicks = this.state.clicks +=1;
                 this.setState({
                   clicks: numClicks
                 });
+                this.checkWin();
               },
 
               reset: function() {
                 this.setState(this.getInitialState());
-              },
-
-              checkWin: function() {
-                var s = this.state.squares;
-                var check = function(a,b,c) {
-                  if(a === b && b === c && c == a && a === "X") {
-                    alert("X wins!");
-                  }
-                  else if(a === b && b === c && c == a && a === "O") {
-                    alert("O wins!");
-                  }
-                };
-                check(s[0], s[1], s[2])
-                check(s[3], s[4], s[5])
-                check(s[6], s[7], s[8])
-                check(s[0], s[3], s[6])
-                check(s[1], s[4], s[7])
-                check(s[2], s[5], s[8])
-                check(s[0], s[4], s[8])
-                check(s[2], s[4], s[6])
               },
 
               render: function() {
@@ -65,7 +74,9 @@
                             return <Square status={letter} key={position} position={this.state.squares[position]} numClicks={this.state.clicks} handleGameClick={this.handleGameClick} />
                           }, this) }
                       </div>
-                  <button onClick={this.reset}>New Game</button>
+                    <div id="win_clear">
+                      <button onClick={this.reset}>New Game</button>
+                    </div>
                   </div>;
               },
           });
@@ -75,6 +86,7 @@
                   letter: " "
                 };
               },
+
               handleClick: function() {
                 if(this.state.played === false) {
                   var letter = this.props.numClicks%2 ? "O" : "X";
@@ -84,12 +96,14 @@
                   });
                 }
               },
+
               render: function() {
                 return (
                   <div onClick={this.handleClick} className="square">{this.state.letter}</div>
                   );
               }
             })
+
             React.render(
                 <Game />,
                 document.getElementById('container')
