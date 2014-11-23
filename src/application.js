@@ -110,9 +110,8 @@
                 this.newGame();
             } 
 
-            else {
-                console.log( [currentPlayer,""].join(" "))
-                
+            //Keep playing
+            else {               
                 this.setState({ grid : tmpGrid, currentPlayer : currentPlayer *=-1 });    
             }
         },

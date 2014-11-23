@@ -1,10 +1,17 @@
 var express = require("express");
+var bodyParser = require('body-parser');
+
 var app = express();
 
 var host = "127.0.0.1";
 var port = 80;
 
 app.use( express.static( "src" ) ); 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
 
 var history = [];
 
@@ -19,8 +26,9 @@ app.get("/games", function(request, response){
 
 //Save Game
 app.post("/games", function(request, response){
-	
-	console.log( "saved");
+	history.push( request.body );
+
+	console.log( history );
 
     response.send( history );
 });
