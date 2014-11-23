@@ -1,4 +1,13 @@
 (function(){
+    var NewGameButton = React.createClass({
+        clickHandler : function(){
+            this.props.newGame();
+        },
+
+        render : function(){
+            return ( <button onClick={this.clickHandler}>New Game</button>);
+        }
+    });
 
     var Game = React.createClass({
         getInitialState : function(){
@@ -119,7 +128,8 @@
         render: function() {
             return (
                 <div>
-                    <div id='game'>
+                    <NewGameButton newGame={this.newGame} />
+                    <div id='game'>                        
                         {this.state.grid.map( function( _tile, _index){
                             return ( <Tile value={ _tile } key={ _index } index={ _index } play = {this.play} playerDisplay = {this.playerDisplay}/> );
                         }, this)}
