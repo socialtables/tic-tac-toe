@@ -80,6 +80,7 @@
         },
 
         play : function( _index ){
+            var self = this;
             var tmpGrid         = this.state.grid;
             var currentPlayer   = this.state.currentPlayer;
             tmpGrid[ _index ]   = currentPlayer; 
@@ -90,11 +91,11 @@
 
                 console.log( message );
 
-                if( window.confirm( message) ){
+                if( window.confirm( message ) ){
                     //Save results
                     $.post("/games", {status:"win",player:currentPlayer}, function(){
                         //start a new game
-                        this.newGame();
+                        self.newGame();
                     });
                          
                 }
