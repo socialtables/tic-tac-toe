@@ -1,7 +1,8 @@
-var express = require("express");
-var bodyParser = require('body-parser');
-
+var express = require('express');
 var app = express();
+var server = require('http').Server(app);
+
+var bodyParser = require('body-parser');
 
 var host = "127.0.0.1";
 var port = 80;
@@ -27,8 +28,6 @@ app.get("/games", function(request, response){
 //Save Game
 app.post("/games", function(request, response){
 	history.push( request.body );
-
-	console.log( history );
 
     response.send( history );
 });
