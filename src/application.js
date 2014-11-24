@@ -147,8 +147,10 @@
             //check for win first
             //last move might result in win
             if( result.hasWinner ){
-                this.forceUpdate();
-                this.processWin();
+                this.setState({hasWinner : result.hasWinner, combination : result.combination }, function(){
+                    this.processWin();
+                });
+                
                 
             } 
             //check for Draw
