@@ -120,7 +120,6 @@
                 if(Math.abs( _grid[ this[0] ] + _grid[ this[1] ] + _grid[ this[2] ]) === 3){
                     combination = this;
                     hasWinner = true;
-
                 }
             });
 
@@ -148,7 +147,9 @@
             //check for win first
             //last move might result in win
             if( result.hasWinner ){
+                this.forceUpdate();
                 this.processWin();
+                
             } 
             //check for Draw
             else if( this.isDraw() ){
@@ -194,6 +195,10 @@
             }
         },
 
+        highlight : function( _index ){
+            return $.inArray( _index, this.state.combination) !== -1;
+        },
+
         render: function() {
             return (
                 <div>
@@ -203,8 +208,8 @@
                         {this.state.grid.map( function( _tile, _index){
                             return ( 
                                 <Tile 
-                                    hasWinner={this.state.combination.length !== 0} 
-                                    highlight={ $.inArray( _index, this.state.combination) !== -1 } 
+                                    hasWinner={this.state.hasWinner} 
+                                    highlight={ this.highlight( _index ) } 
                                     value={ _tile } 
                                     key={ _index } 
                                     index={ _index } 
