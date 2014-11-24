@@ -102,10 +102,9 @@
             return this.playerDisplay(this.state.currentPlayer); 
         },
 
-        winnerCheck : function(){
+        winnerCheck : function( _grid ){
             var hasWinner = false;
             var combination = [];
-            var tmpGrid = this.state.grid;
             var winnngArrays = [];
             
             winnngArrays.push( [0,1,2] );
@@ -118,16 +117,14 @@
             winnngArrays.push( [2,4,6] );
 
             $.each(winnngArrays, function(){
-                if(Math.abs( tmpGrid[ this[0] ] + tmpGrid[ this[1] ] + tmpGrid[ this[2] ]) === 3){
+                if(Math.abs( _grid[ this[0] ] + _grid[ this[1] ] + _grid[ this[2] ]) === 3){
                     combination = this;
                     hasWinner = true;
 
                 }
             });
 
-            this.setState({combination : combination, hasWinner : hasWinner });
-            
-            console.log(hasWinner);
+            return {combination : combination, hasWinner : hasWinner };
         },
 
         hasWinner : function(){
@@ -143,13 +140,14 @@
             var tmpGrid         = this.state.grid;
             var currentPlayer   = this.state.currentPlayer
             tmpGrid[ _index ]   = currentPlayer; 
-            this.setState({ grid : tmpGrid});
+            //this.setState({ grid : tmpGrid});
 
-            this.winnerCheck();            
+            var result = this.winnerCheck( tmpGrid );            
 
+            console.log(result);
             //check for win first
             //last move might result in win
-            if( this.state.hasWinner ){
+            if( result.hasWinner ){
                 this.processWin();
             } 
             //check for Draw
@@ -158,7 +156,7 @@
             } 
 
             else {
-                this.setState({currentPlayer : this.state.currentPlayer *=-1 });    
+                this.setState({grid: tmpGrid, currentPlayer : this.state.currentPlayer *=-1 });    
             }          
             
         },
