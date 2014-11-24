@@ -18,7 +18,7 @@
             return ( 
                 <div>
                     <div>X {this.getRatio( -1 )}%</div>
-                    <div>Draw {this.getRatio( 0 )}%</div>
+                    
                     <div>O {this.getRatio( 1 )}%</div>
                 </div> 
             );
@@ -131,7 +131,7 @@
         },
 
         isDraw : function(){
-            console.log( $.inArray(this.state.grid,0) );
+            // console.log( $.inArray(this.state.grid,0) );
             return $.inArray(this.state.grid,0) !== -1;
         },
 
@@ -139,19 +139,15 @@
             var tmpGrid         = this.state.grid;
             var currentPlayer   = this.state.currentPlayer
             tmpGrid[ _index ]   = currentPlayer; 
-            //this.setState({ grid : tmpGrid});
 
             var result = this.winnerCheck( tmpGrid );            
 
-            console.log(result);
             //check for win first
             //last move might result in win
             if( result.hasWinner ){
                 this.setState({hasWinner : result.hasWinner, combination : result.combination }, function(){
                     this.processWin();
                 });
-                
-                
             } 
             //check for Draw
             else if( this.isDraw() ){
@@ -165,36 +161,35 @@
         },
 
         processWin : function(){
-            var self = this;
             var history = this.state.history;
-
+            var game = {status:"win",player:this.state.currentPlayer};
             var message = ["player",this.currentPlayerDisplay(),"wins!","\n","New Game?"].join(" ");
 
-            if( window.confirm( message ) ){
-                //Save results
-                var game = {status:"win",player:this.state.currentPlayer};
+            this.saveGame( game );
 
-                $.post("/games", game, function(){
-                    //start a new game
-                    self.setState( {history : history.push(game)} );
-                    self.newGame();
-                });                     
+            if( window.confirm( message ) ){
+                this.newGame();                     
             }
         },
 
         processDraw : function(){
-            var self = this;
-
-            var message = [""].join(" ");
             var game = {status:"draw",player:0};
 
+            this.saveGame( game );
+
             if( window.confirm( "It's A Draw!/nPlay Again?" ) ){
-                //Save results
-                $.post("/games", game, function(){
-                    //start a new game
-                    self.newGame();
-                });                     
+                this.newGame();                        
             }
+        },
+
+        saveGame : function( _game ){
+            var self = this;
+            //Save results
+            $.post("/games", _game, function(){
+
+                self.setState( { history : self.state.history.concat( _game ) } );
+                
+            });
         },
 
         highlight : function( _index ){
