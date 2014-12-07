@@ -55,6 +55,34 @@ body {
         font-size: 21px;
         padding: 14px 24px;
     }
+//    height: 325px;
+    .game {
+        background-color: rgba(101, 106, 166, 0.18);
+        div.row {
+            height: 100px;
+            position: relative;
+            div.cell {
+                height: 100%;
+            }
+        }
+        height: 300px;
+        max-height: 300px;
+        .top {
+            border-bottom: solid 3px black;
+            position: absolute;
+            top: 100%;
+            bottom: 0%;
+            left: 25%;
+            right: 25%;
+            z-index: 100;
+        }
+        .center {
+            border-left: solid 3px black;
+        }
+        .right {
+            border-left: solid 3px black;
+        }
+    }
 }
 
 /* Supporting marketing content */

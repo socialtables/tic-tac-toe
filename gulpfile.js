@@ -24,27 +24,21 @@ gulp.task('styles', function () {
         .pipe($.size());
 });
 
-
-
-
-
 // Scripts
 gulp.task('scripts', function () {
-    return browserify('./app/scripts/app.js')
+//    return browserify({entries: ['./app/scripts/app.js']})
+    return browserify({entries: ['./app/scripts/app.js'], debug:true})
             .bundle()
             .pipe(source('app.js'))
-            .pipe(gulp.dest('dist/scripts'))
+            .pipe(gulp.dest('dist/scripts'));
 });
-
 
 
 gulp.task('jade', function () {
     return gulp.src('app/template/*.jade')
         .pipe($.jade({ pretty: true }))
         .pipe(gulp.dest('dist'));
-})
-
-
+});
 
 // HTML
 gulp.task('html', function () {
@@ -90,14 +84,12 @@ gulp.task('build', ['html', 'bundle', 'images']);
 gulp.task('default', ['clean', 'build']);
 
 // Webserver
-var lr = require('gulp-livereload');
 gulp.task('serve', function () {
-//	lr.listen();
-//	var dest = 
     gulp.src('dist')
         .pipe($.webserver({
             livereload: true,
-            port: 9000
+            port: 9000,
+			host: 'tictactoe.dev'
         }));
 });
 
