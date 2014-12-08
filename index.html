@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" type="text/css" href="tic-tac-toe.css">
+    <script src="http://fb.me/react-0.12.0.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.12.0.js"></script>
+  </head>
+  <body>
+    <h1>Tic Tac Toe</h1>
+    <div id="app"></div>
+    <script type="text/jsx">
+      /**
+        * @jsx React.DOM
+        */
+ 
+        (function(){
+            var GameConsole = React.createClass({
+              render: function() {
+                return <h3>{this.props.turn} to move</h3>;
+              }
+            });
+ 
+            var Tile = React.createClass({
+              clickHandler: function() {
+                // console.log("clicked");
+                // console.log("who's turn is it?", this.props.turn);
+                // console.log("this is what should show up in the box:", this.props.mark);
+                // console.log("this is the box position:", this.props.pos);
+                this.props.squareClick(this.props.pos, this.props.turn);
+              },
+              render: function() {
+                return <div className={this.props.mark === '' ? 'tile' : 'tile mark-' + this.props.mark} onClick={this.clickHandler}>{this.props.mark}</div>;
+              }
+            });
+ 
+            var TicTacToe = React.createClass({
+ 
+              getInitialState: function() {
+                return {
+                  squares:[
+                    " ", " ", " ",
+                    " ", " ", " ",
+                    " ", " ", " "
+                  ],
+                  turn: "o",
+                };
+              },
+              squareClick: function(position, player) {
+                var squares = this.state.squares;
+                if ( (squares[position] === 'x' || squares[position] === 'o') ) return;
+                squares[position] = player;
+                this.setState({squares: squares, turn: player === "o" ? "x" : "o"});
+                this.checkWin();
+              },
+              checkWin: function(position, player) {
+                var squares = this.state.squares;
+ 
+                var rowOne = squares[0] + squares[1] + squares[2];
+                var rowTwo = squares[3] + squares[4] + squares[5];
+                var rowThree = squares[6] + squares[7] + squares[8];
+                var colOne = squares[0] + squares[3] + squares[6];
+                var colTwo = squares[1] + squares[4] + squares[7];
+                var colThree = squares[2] + squares[5] + squares[8];
+                var diagOne = squares[0] + squares[4] + squares[8];
+                var diagTwo = squares[6] + squares[4] + squares[2];
+ 
+                if ( ("xxx" === rowOne) || ("xxx" === rowTwo) || ("xxx" === rowThree) || ("xxx" === colOne) || ("xxx" === colTwo) || ("xxx" === colThree) || ("xxx" === diagOne) || ("xxx" === diagTwo) ) {
+                  alert("x wins");
+                } else if ( ("ooo" === rowOne) || ("ooo" === rowTwo) || ("ooo" === rowThree) || ("ooo" === colOne) || ("ooo" === colTwo) || ("ooo" === colThree) || ("ooo" === diagOne) || ("ooo" === diagTwo) ) {
+                  alert("o wins");
+                }
+              },
+              render: function() {
+                return (
+                  <div>
+                    <GameConsole turn={this.state.turn} />
+                    <div id="board">
+                      {this.state.squares.map(function(square,position){
+                        return (
+                          <Tile mark={square} pos={position} key={position} turn={this.state.turn} squareClick={this.squareClick} />
+                          );
+                      }, this)}
+                    </div>
+                  </div>
+                )
+              },
+            });
+ 
+            React.render(
+                <TicTacToe />,
+                document.getElementById('app')
+            );
+        })();
+    </script>
+  </body>
+</html>

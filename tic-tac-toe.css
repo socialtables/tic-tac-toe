@@ -1,0 +1,23 @@
+#console {
+  width: 300px;
+  background-color: blue;
+}
+ 
+#board {
+  width: 350px;
+  height: 350px;
+  box-sizing: content-box;
+}
+ 
+.tile {
+  background-color: white;
+  height: 100px;
+  width: 100px;
+  border: 1px solid black;
+  display: block;
+  float: left;
+  color: black;
+  line-height: 100px;
+  font-size: 50px;
+  text-align: center;
+}
