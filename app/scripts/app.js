@@ -4,13 +4,13 @@ var React = window.React = require('react'),
     Timer = require("./ui/Timer"),
     nick = require("./testing/test"),
     mountNode = document.getElementById("app"),
-    start = require("./game/start");
+    start = require("./game/start.jsx");
 start();
 
 var TodoList = React.createClass({
   render: function() {
     var createItem = function(itemText) {
-      return <li>{itemText}</li>;
+      return ( <li>{itemText}</li>; )
     };
     return <ul>{this.props.items.map(createItem)}</ul>;
   }

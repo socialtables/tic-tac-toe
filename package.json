@@ -2,7 +2,8 @@
   "name": "tic-tac-toe",
   "version": "0.0.0",
   "dependencies": {
-    "jquery": "^2.1.1"
+    "jquery": "^2.1.1",
+    "jsxhint": "^0.8.1"
   },
   "devDependencies": {
     "del": "~0.1.3",
