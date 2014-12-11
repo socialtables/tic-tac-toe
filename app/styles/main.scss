@@ -56,7 +56,17 @@ body {
         padding: 14px 24px;
     }
 //    height: 325px;
+    div.scoreboard {
+        margin: 0 auto;
+        height: 80px;
+        width: 40%;
+        @include box-shadow(3px);
+        border: 3px black solid;
+        color: $btn-primary-color;
+        overflow: hidden;
+    }
     .game {
+        margin: 5px;
         background-color: rgba(101, 106, 166, 0.18);
         div.row {
             height: 100px;

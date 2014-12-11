@@ -17,7 +17,8 @@ gulp.task('styles', function () {
         .pipe($.rubySass({
             style: 'expanded',
             precision: 10,
-            loadPath: ['app/bower_components']
+//            loadPath: ['app/bower_components']
+            loadPath: process.cwd() + '/app/bower_components'
         }))
         .pipe($.autoprefixer('last 1 version'))
         .pipe(gulp.dest('dist/styles'))
@@ -118,8 +119,6 @@ gulp.task('watch', ['html', 'bundle', 'serve'], function () {
     
     // Watch .scss files
     gulp.watch('app/styles/**/*.scss', ['styles']);
-    
-
 
     // Watch .jade files
     gulp.watch('app/template/**/*.jade', ['jade', 'html']);

@@ -9,12 +9,12 @@ var React = require('react'),
 
 var app = {
     PLAYERX: {
-        name: 'playerX',
-        wins: 0
+        wins: 0,
+        displayName: 'Player X'
     },
 	PLAYERO: {
-		name: 'playerO',
-        wins: 0
+        wins: 0,
+        displayName: 'Player O'
 	}
 }
 
@@ -84,7 +84,7 @@ var Game = React.createClass({
             });
             if( gameOver) {
                 this.updateScoreboard(player);
-                alert('Game over ' + player.name + ' has won!');
+                alert('Game over ' + player.displayName + ' has won!');
             }
             return gameOver;
         };
@@ -96,7 +96,7 @@ var Game = React.createClass({
             gameBoard.push('');
         }
         return {
-            whoseTurn: app.PLAYERX.name,
+            whoseTurn: app.PLAYERX,
             gameBoard: gameBoard
         }
     },
@@ -105,16 +105,15 @@ var Game = React.createClass({
         var index = location[0] * 3 + location[1];
         var gameBoard = this.state.gameBoard;
         gameBoard[index] = player;
-        if (player === app.PLAYERX.name) {
-            this.isGameOver(app.PLAYERX, index);
+        this.isGameOver(player, index);
+        if (player === app.PLAYERX) {
             this.setState({
-                whoseTurn: app.PLAYERO.name,
+                whoseTurn: app.PLAYERO,
                 gameBoard: gameBoard
             })
         } else {
-            this.isGameOver(app.PLAYERO, index, gameBoard);
             this.setState({
-                whoseTurn: app.PLAYERX.name,
+                whoseTurn: app.PLAYERX,
                 gameBoard: gameBoard
             })
         }
@@ -125,10 +124,50 @@ var Game = React.createClass({
             return <Row row={row} onCellClick={this.handleCellClick} whoseTurn={this.state.whoseTurn}/>
         }, this);
         return  (
-            <div className="game">
-                {Rows}
+            <div>
+				<div className="scoreboard">
+                    <div className="pull-left">
+                        <ScoreBoard player={app.PLAYERX} />
+					</div>
+                    <div className="pull-right">
+                        <ScoreBoard player={app.PLAYERO} />
+                    </div>
+				</div>
+                <div className="game">
+					{Rows}
+                </div>
+                <div className="player-turn">
+                    <PlayerTurn player={this.state.whoseTurn} />
+                </div>
             </div>
         );
+    }
+});
+
+var ScoreBoard = React.createClass({
+    render: function () {
+        var player = this.props.player;
+        return (
+            <div>
+                <div>
+				{player.displayName}
+                </div>
+                <div>
+                {player.wins}
+                </div>
+			</div>
+        )
+    }
+});
+
+var PlayerTurn = React.createClass({
+    render: function () {
+        var playerDisplayName = this.props.player.displayName;
+        return (
+            <p>
+            {playerDisplayName}
+			</p>
+        )
     }
 });
 
@@ -178,7 +217,7 @@ var Cell = React.createClass({
         }
         var cell = this.refs.cell.getDOMNode(),
             player = this.props.whoseTurn;
-        if (player === app.PLAYERX.name) {
+        if (player === app.PLAYERX) {
             $(cell).append('<div><img src="images/X.svg" /></div>');
         } else {
             $(cell).append('<div><img src="images/O.svg" /></div>');
