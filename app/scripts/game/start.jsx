@@ -18,7 +18,7 @@ var app = {
 	}
 }
 
-app.winningSolutions = {
+app.solutions = {
     '0': [
         [1,2], // row0
         [3,6], // column0
@@ -65,9 +65,25 @@ app.winningSolutions = {
 
 var Game = React.createClass({
     mixins: [BackboneReactMixin],
+    getInitialState: function () {
+        var gameBoard = [],
+            winningSolution = [];
+        for (var i = 0; i < 9; i++)
+        {
+            gameBoard.push(''); //TODO: Do I need to do this?
+            if(i < 3) {
+                winningSolution.push('');
+            }
+        }
+        return {
+            whoseTurn: app.PLAYERX,
+            gameBoard: gameBoard,
+            isGameOver: false,
+            winningSolution: winningSolution
+        }
+    },
     updateScoreboard: function (player) {
         player.wins = player.wins + 1;
-        return;
     },
     isGameOver: (function () {
         app.PLAYERO.cells = [];
@@ -76,36 +92,25 @@ var Game = React.createClass({
             var gameOver = false,
                 cells = player['cells'];
             cells.push(index);
-            var solutions = app.winningSolutions[index];
-            _.each(solutions, function (arr) {
+            var possibleSolutions = app.solutions[index];
+            _.each(possibleSolutions, function (arr) {
                 if(_.contains(cells, arr[0]) && _.contains(cells, arr[1])) {
                     gameOver = true;
+                    this.setState({winningSolution: cells});
                 }
-            });
-            if( gameOver) {
-                this.updateScoreboard(player);
-                alert('Game over ' + player.displayName + ' has won!');
-            }
+            }, this);
             return gameOver;
         };
     })(),
-    getInitialState: function () {
-        var gameBoard = [];
-        for (var i = 0; i < 9; i++)
-        {
-            gameBoard.push('');
-        }
-        return {
-            whoseTurn: app.PLAYERX,
-            gameBoard: gameBoard
-        }
+    clearBoard: function () {
+        app.PLAYERO.cells = [];
+        app.PLAYERX.cells = [];
+        this.setState(this.getInitialState());
     },
     handleCellClick: function (location) {
-        var player = this.state.whoseTurn;
-        var index = location[0] * 3 + location[1];
-        var gameBoard = this.state.gameBoard;
-        gameBoard[index] = player;
-        this.isGameOver(player, index);
+        var player = this.state.whoseTurn,
+            gameBoard = this.state.gameBoard;
+        gameBoard[location] = player;
         if (player === app.PLAYERX) {
             this.setState({
                 whoseTurn: app.PLAYERO,
@@ -117,21 +122,38 @@ var Game = React.createClass({
                 gameBoard: gameBoard
             })
         }
+        if( this.isGameOver(player, location) ) {
+            this.updateScoreboard(player);
+            this.setState({isGameOver: true});
+        }
+        //if( this.isGameOver(player, location) ) {
+        //    this.updateScoreboard(player);
+        //    alert('Game over ' + player.displayName + ' has won!');
+        //    //this.clearBoard();
+        //};
+    },
+    componentDidUpdate: function (prevProps, prevState) {
+        if(this.state.isGameOver) {
+            //var player = prevState.whoseTurn;
+			//alert('Game over ' + player.displayName + ' has won!');
+			//this.clearBoard();
+        }
     },
     render: function() {
         var Rows;
         Rows = [0,1,2].map(function (row) {
-            return <Row row={row} onCellClick={this.handleCellClick} whoseTurn={this.state.whoseTurn}/>
+            return <Row row={row}
+                        onCellClick={this.handleCellClick}
+                        gameBoard={this.state.gameBoard}
+                        isGameOver={this.state.isGameOver}
+                        winningSolution={this.state.winningSolution}
+                   />
         }, this);
         return  (
             <div>
 				<div className="scoreboard">
-                    <div className="pull-left">
-                        <ScoreBoard player={app.PLAYERX} />
-					</div>
-                    <div className="pull-right">
-                        <ScoreBoard player={app.PLAYERO} />
-                    </div>
+					<ScoreBoard player={app.PLAYERX} className="pull-left"/>
+					<ScoreBoard player={app.PLAYERO} className="pull-right"/>
 				</div>
                 <div className="game">
 					{Rows}
@@ -144,38 +166,13 @@ var Game = React.createClass({
     }
 });
 
-var ScoreBoard = React.createClass({
-    render: function () {
-        var player = this.props.player;
-        return (
-            <div>
-                <div>
-				{player.displayName}
-                </div>
-                <div>
-                {player.wins}
-                </div>
-			</div>
-        )
-    }
-});
-
-var PlayerTurn = React.createClass({
-    render: function () {
-        var playerDisplayName = this.props.player.displayName;
-        return (
-            <p>
-            {playerDisplayName}
-			</p>
-        )
-    }
-});
-
 var Row = React.createClass({
-    getRowClassName: function (row) {
-        lookup = ['top-row', 'middle-row', 'bottom-row'];
-        return lookup[row];
-    },
+    getRowClassName: (function () {
+        var lookup = ['top-row', 'middle-row', 'bottom-row'];
+        return function (row) {
+            return lookup[row];
+        }
+    })(),
     getBorder: function (row) {
         if(row === 0 || row === 1) {
             return border = <div className="border-top"></div> // Rename to border-bottom?
@@ -183,11 +180,20 @@ var Row = React.createClass({
         return '';
     },
     render: function () {
-        var row = this.props.row,
+        var status,
+            location,
+            row = this.props.row,
             rowName = this.getRowClassName(row),
             border = this.getBorder(row);
         Cells = [0,1,2].map(function (cell) {
-            return <Cell onCellClick={this.props.onCellClick} location={[row, cell]} whoseTurn={this.props.whoseTurn}/>
+            location = row * 3 + cell;
+            status = this.props.gameBoard[location];
+            return <Cell onCellClick={this.props.onCellClick}
+                         location={location}
+                         status={status}
+                         isGameOver={this.props.isGameOver}
+                         isInWinningSolution={_.contains(this.props.winningSolution, location) ? true : false}
+                   />
         }, this);
         return (
             <div className={"row " + rowName}>
@@ -200,40 +206,74 @@ var Row = React.createClass({
 });
 
 var Cell = React.createClass({
-    getInitialState: function () {
-        return {isSet: false};
-    },
     getClassName: function (location) {
-        if(location === 0) {
+        var cellLocation = location % 3;
+        if(cellLocation === 0) {
             return 'left';
-        } else if (location === 1) {
+        } else if (cellLocation === 1) {
             return 'center';
         }
 		return 'right'
     },
     handleClick: function () {
-        if (this.state.isSet) {
+        if (this.props.status || this.props.isGameOver) {
             return;
         }
-        var cell = this.refs.cell.getDOMNode(),
-            player = this.props.whoseTurn;
-        if (player === app.PLAYERX) {
-            $(cell).append('<div><img src="images/X.svg" /></div>');
-        } else {
-            $(cell).append('<div><img src="images/O.svg" /></div>');
-        }
         this.props.onCellClick(this.props.location);
-        this.setState({isSet: true});
+    },
+    getFill: function (status, isInWinningSolution) {
+        debugger;
+        if (status === app.PLAYERX && !isInWinningSolution) {
+            return <div><img src="images/X.svg" /></div>;
+        } else if (status === app.PLAYERO && !isInWinningSolution) {
+            return <div><img src="images/O.svg" /></div>;
+        } else if (status === app.PLAYERX && isInWinningSolution) {
+            return <div><img src="images/Red-X.svg" /></div>;
+        } else if (status === app.PLAYERO && isInWinningSolution) {
+            return <div><img src="images/Red-O.svg" /></div>;
+        }
+        return '';
     },
     render: function () {
-        var className = this.getClassName(this.props.location[1]);
+        var status = this.props.status,
+            fill = this.getFill(status, this.props.isInWinningSolution),
+            isGameOver = this.props.isGameOver,
+            className = this.getClassName(this.props.location);
 		className = "cell " + className + " col-xs-2 col-sm-2 col-md-2 col-lg-2";
 		return (
 			<div onClick={this.handleClick} className={className} ref="cell">
-                <div className="pointer">
+                <div className={"pointer " + (isGameOver ? '' : 'pointer-on')}>
+                {fill}
                 </div>
             </div>
         );
+    }
+});
+
+var ScoreBoard = React.createClass({
+    render: function () {
+        var player = this.props.player;
+        return (
+            <div className={"scoreboard-player " + this.props.className}>
+                <div>
+				{player.displayName}
+                </div>
+                <div>
+                {player.wins}
+                </div>
+            </div>
+        )
+    }
+});
+
+var PlayerTurn = React.createClass({
+    render: function () {
+        var playerDisplayName = this.props.player.displayName;
+        return (
+            <p>
+            {playerDisplayName}
+            </p>
+        )
     }
 });
 

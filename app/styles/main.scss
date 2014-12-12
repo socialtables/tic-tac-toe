@@ -59,11 +59,26 @@ body {
     div.scoreboard {
         margin: 0 auto;
         height: 80px;
-        width: 40%;
+        width: 35%;
         @include box-shadow(3px);
         border: 3px black solid;
         color: $btn-primary-color;
         overflow: hidden;
+        div.pull-left {
+            border-right: 3px solid #0000FF;
+        }
+        div.scoreboard-player {
+            height: 100%;
+            width: 50%;
+            div:first-child {
+//                text-decoration: underline;
+                border-bottom: 3px solid #00b3ee;
+            }
+            div:nth-child(2) {
+                height: 100%;
+                font-size: 38px;
+            }
+        }
     }
     .game {
         margin: 5px;
@@ -95,6 +110,8 @@ body {
         .cell div.pointer {
             width: 87%;
             height: 82%;
+        }
+        .cell div.pointer-on {
             cursor: pointer;
         }
         .cell div {
