@@ -15,18 +15,56 @@
 </head>
 <body>
 <div class="container">
-    <div id="start">
-    </div>
-    <h1>Tic Tac Toe!</h1>
+    <div class="row" style="position: relative;">
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+            <h1>Tic Tac Toe!</h1>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div id="modal-container"></div>
+        </div>
+	</div>
+
+    <!-- Modal -->
+    <!--<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
+        <!--<div class="modal-dialog">-->
+            <!--<div class="modal-content">-->
+                <!--<div class="modal-header">-->
+                    <!--<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>-->
+                    <!--<h4 class="modal-title" id="myModalLabel">New Game</h4>-->
+                <!--</div>-->
+                <!--<div class="modal-body">-->
+                    <!--<form class="form-horizontal" role="form">-->
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-xs-4 control-label" for="playerX">Player X:</label>-->
+                            <!--<div class="col-xs-8 no-padding-left">-->
+                                <!--<input type="text" class="form-control" id="playerX">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-xs-4 control-label" for="playerO">Player O:</label>-->
+                            <!--<div class="col-xs-8 no-padding-left">-->
+                                <!--<input type="text" class="form-control" id="playerO">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</form>-->
+                <!--</div>-->
+                <!--<div class="modal-footer">-->
+                    <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+                    <!--<button type="button" class="btn btn-primary">Start</button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
 
     <div id="jumbotron" class="jumbotron col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div id="react-start"></div>
     </div>
+
     <div class="footer">
         <p>By Nick DeCoursin :)</p>
     </div>
 </div>
 <script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
 <script src="scripts/app.js"></script>
 </body>
 </html>

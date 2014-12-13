@@ -2,6 +2,8 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/assets/fonts/";
 
 @import "bootstrap-sass-official/assets/stylesheets/bootstrap";
 
+$myBlue: #262626; //myBlue which is actually blueish black
+
 .browsehappy {
     margin: 0.2em 0;
     background: #ccc;
@@ -40,11 +42,24 @@ body {
 .footer {
     padding-top: 19px;
     color: #777;
-    border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #262626;
 }
 
 .container-narrow > hr {
     margin: 30px 0;
+}
+
+.modal {
+    .modal-dialog {
+        width: 300px;
+        margin: 30px auto;
+    }
+    .no-padding-left {
+        padding-left: 0;
+    }
+    .form-horizontal .form-group {
+        margin-right: 0;
+    }
 }
 
 /* Main marketing message and sign up button */
@@ -55,26 +70,26 @@ body {
         font-size: 21px;
         padding: 14px 24px;
     }
-//    height: 325px;
     div.scoreboard {
         margin: 0 auto;
         height: 80px;
         width: 35%;
         @include box-shadow(3px);
-        border: 3px black solid;
-        color: $btn-primary-color;
+        border: 3px $myBlue solid;
         overflow: hidden;
         div.pull-left {
-            border-right: 3px solid #0000FF;
+            border-right: 3px solid $myBlue;
         }
         div.scoreboard-player {
+            color: $myBlue;
             height: 100%;
             width: 50%;
             div:first-child {
-//                text-decoration: underline;
-                border-bottom: 3px solid #00b3ee;
+                font-weight: bold;
+                border-bottom: 3px solid $myBlue;
             }
             div:nth-child(2) {
+                color: $btn-success-bg;
                 height: 100%;
                 font-size: 38px;
             }
