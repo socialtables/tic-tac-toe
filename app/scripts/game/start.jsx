@@ -2,120 +2,120 @@ var React = require('react'),
     BackboneReactMixin = require('backbone-react-component'),
     mountNode = $("#jumbotron")[0],
     app = require('./globals'),
-    modal = require('./modal'),
-    _ = require('underscore');
+    modal = require('./modal.jsx'),
+    _ = require('underscore'),
+    PlayerModel = require('./PlayerModel');
+
 //var Players = require('../collections/Players');
 //var Player = require('../collections/Player');
 
 var Game = React.createClass({
-    mixins: [BackboneReactMixin],
+    //mixins: [BackboneReactMixin],
     getInitialState: function () {
-        var gameBoard = [],
-            winningSolution = [],
+		var winningSolution = [],
             winner = false;
-        for (var i = 0; i < 9; i++)
+        for (var i = 0; i < 3; i++)
         {
-            gameBoard.push('');
-            if(i < 3) {
-                winningSolution.push('');
-            }
+			winningSolution.push('');
         }
         return {
-            whoseTurn: app.PLAYERX,
-            gameBoard: gameBoard,
             winningSolution: winningSolution,
             winner: winner
         }
     },
     updateScoreboard: function (player) {
         player.wins = player.wins + 1;
+        this.props.model.store();
     },
-    isGameOver: function (player, index) {
+    gameOver: function (player, index) {
 		var gameOver = false,
-			cells = player['cells'],
+			cells = player.cells,
 			winningSolution = false;
-		cells.push(index);
 		var possibleSolutions = app.solutions[index];
 		_.each(possibleSolutions, function (arr) {
 			if(_.contains(cells, arr[0]) && _.contains(cells, arr[1])) {
 				winningSolution = arr;
 				winningSolution.push(index);
+                return;
 			}
 		}, this);
 		return winningSolution
     },
-    clearBoard: function () {
-        app.PLAYERO.cells = [];
-        app.PLAYERX.cells = [];
-        this.setState(this.getInitialState());
-    },
     handleCellClick: function (location) {
-        var player = this.state.whoseTurn,
-            gameBoard = this.state.gameBoard,
+        var player = this.getWhoseTurn(),
             winningSolution;
-        gameBoard[location] = player;
-        if (player === app.PLAYERX) {
-            this.setState({
-                whoseTurn: app.PLAYERO,
-                gameBoard: gameBoard
-            })
-        } else {
-            this.setState({
-                whoseTurn: app.PLAYERX,
-                gameBoard: gameBoard
-            })
-        }
-        if(winningSolution = this.isGameOver(player, location) ) {
+        player.cells.push(location);
+        if(winningSolution = this.gameOver(player, location) ) {
             this.updateScoreboard(player);
             this.setState({
                 winningSolution: winningSolution,
                 winner: player
             });
+            this.props.model.wasGameOver = true;
+			setTimeout(function() {
+				this.props.model.clearPlayerCells();
+                this.props.model.wasGameOver = false;
+                this.setState(this.getInitialState());
+                this.props.model.store();
+			}.bind(this), 3000);
+        } else {
+            this.forceUpdate();
         }
+        this.props.model.store();
     },
     getNewPlayers: function () {
         $('#modal').modal();
     },
     resetScoreBoard: function () {
-        app.PLAYERO.wins = 0;
-        app.PLAYERX.wins = 0;
+        _.each(this.props.model.players, function (player) {
+            player.wins = 0;
+        });
     },
     newGame: function (event) {
-        this.clearBoard();
         this.resetScoreBoard();
         this.getNewPlayers();
     },
     componentDidUpdate: function (prevProps, prevState) {
-        if(this.state.winner) {
-            setTimeout(function() {
-                //TODO: set pointer that is loading or display somehow that it's clearingBoard
-                // "Game over. Clearing board.."
-                this.clearBoard();
-            }.bind(this), 3000);
+        //if(this.state.winner) {
+        //    setTimeout(function() {
+        //        //TODO: set pointer that is loading or display somehow that it's clearingBoard
+        //        // "Game over. Clearing board.."
+        //    }.bind(this), 3000);
+        //}
+        ;
+    },
+    getWhoseTurn: function() {
+        var playerX = this.props.model.players.PLAYERX,
+            playerO = this.props.model.players.PLAYERO;
+        if(playerX.cells.length === playerO.cells.length)
+        {
+            return playerX;
+        } else {
+            return playerO;
         }
     },
     render: function() {
-        //React.render(modal)
         var Rows;
         Rows = [0,1,2].map(function (row) {
-            return <Row row={row}
+            return <Row key={row}
+                        row={row}
                         onCellClick={this.handleCellClick}
-                        gameBoard={this.state.gameBoard}
-                        isGameOver={this.state.winner ? true : false}
+                        players={this.props.model.players}
+                        isGameOver={this.state.winner ? true : false} // Could use this.props.model.wasGameOver but it has a different purpose
                         winningSolution={this.state.winningSolution}
                    />
         }, this);
         return  (
             <div>
 				<div className="scoreboard">
-					<ScoreBoard player={app.PLAYERX} className="pull-left"/>
-					<ScoreBoard player={app.PLAYERO} className="pull-right"/>
+					<ScoreBoard player={this.props.model.players.PLAYERX} className="pull-left"/>
+					<ScoreBoard player={this.props.model.players.PLAYERO} className="pull-right"/>
 				</div>
                 <div className="game">
 					{Rows}
                 </div>
                 <div className="player-turn">
-                    <PlayerTurn player={this.state.whoseTurn} winner={this.state.winner}/>
+                    <PlayerTurn player={this.getWhoseTurn()} winner={this.state.winner}/>
                 </div>
             </div>
         );
@@ -136,15 +136,22 @@ var Row = React.createClass({
         return '';
     },
     render: function () {
-        var status,
+        var status = '',
             location,
             row = this.props.row,
             rowName = this.getRowClassName(row),
             border = this.getBorder(row);
         Cells = [0,1,2].map(function (cell) {
             location = row * 3 + cell;
-            status = this.props.gameBoard[location];
-            return <Cell onCellClick={this.props.onCellClick}
+            status = '';
+            _.each(this.props.players, function (player) {
+                if(_.contains(player.cells, location)) {
+                    status = player;
+                    return;
+                }
+            });
+            return <Cell key={location}
+                         onCellClick={this.props.onCellClick}
                          location={location}
                          status={status}
                          isGameOver={this.props.isGameOver}
@@ -178,13 +185,13 @@ var Cell = React.createClass({
         this.props.onCellClick(this.props.location);
     },
     getFill: function (status, isInWinningSolution) {
-        if (status === app.PLAYERX && !isInWinningSolution) {
+        if (status.keyName === 'playerX' && !isInWinningSolution) {
             return <div><img src="images/X.svg" /></div>;
-        } else if (status === app.PLAYERO && !isInWinningSolution) {
+        } else if (status.keyName === 'playerO' && !isInWinningSolution) {
             return <div><img src="images/O.svg" /></div>;
-        } else if (status === app.PLAYERX && isInWinningSolution) {
+        } else if (status.keyName === 'playerX' && isInWinningSolution) {
             return <div><img src="images/Red-X.svg" /></div>;
-        } else if (status === app.PLAYERO && isInWinningSolution) {
+        } else if (status.keyName === 'playerO' && isInWinningSolution) {
             return <div><img src="images/Red-O.svg" /></div>;
         }
         return '';
@@ -237,6 +244,7 @@ var ScoreBoard = React.createClass({
     }
 });
 
+// TODO: Rename PlayerTurn to something else
 var PlayerTurn = React.createClass({
     render: function () {
         var status;
@@ -253,6 +261,8 @@ var PlayerTurn = React.createClass({
     }
 });
 
+playerModel = new PlayerModel('tic-tac-toe');
+
 module.exports = function () {
-    React.render(<Game />, mountNode);
+    React.render(<Game model={playerModel}/>, mountNode);
 };

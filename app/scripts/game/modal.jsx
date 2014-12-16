@@ -3,12 +3,9 @@ var React = require('react'),
     mountNode = $("#modal-container")[0];
 
 var BootstrapButton = React.createClass({
-    handleClick: function (event) {
-        this.props.handleClick(event);
-    },
     render: function() {
         return (
-			<button onClick={this.props.handleClick} className="btn btn-primary">New Game</button>
+			<button onClick={this.props.handleClick.bind(undefined)} className="btn btn-primary">New Game</button>
         );
     }
 });
@@ -92,7 +89,6 @@ var Modal = React.createClass({
     }
 });
 
-//module.exports = function () {
-//    React.render(<Modal />, mountNode);
-//}
-module.exports = <Modal />;
+module.exports = function () {
+    React.render(<Modal />, mountNode);
+}
