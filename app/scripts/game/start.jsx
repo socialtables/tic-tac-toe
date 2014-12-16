@@ -58,10 +58,30 @@ var Game = React.createClass({
                 this.setState(this.getInitialState());
                 this.props.model.store();
 			}.bind(this), 3000);
+        } else if(this.isTieGame()) {
+            this.setState({
+                winningSolution: '',
+                winner: app.TIE_GAME
+            });
+            this.props.model.wasGameOver = true;
+            setTimeout(function() {
+                this.props.model.clearPlayerCells();
+                this.props.model.wasGameOver = false;
+                this.setState(this.getInitialState());
+                this.props.model.store();
+            }.bind(this), 3000);
         } else {
             this.forceUpdate();
         }
         this.props.model.store();
+    },
+    isTieGame: function() {
+        var playerX = this.props.model.players.PLAYERX,
+            playerO = this.props.model.players.PLAYERO;
+        if(_.uniq(playerX.cells).length === 5 && _.uniq(playerO.cells).length === 4) {
+            return true;
+        }
+        return false;
     },
     getNewPlayers: function () {
         $('#modal').modal();
@@ -96,12 +116,13 @@ var Game = React.createClass({
     },
     render: function() {
         var Rows;
+        var winner = this.state.winner;
         Rows = [0,1,2].map(function (row) {
             return <Row key={row}
                         row={row}
                         onCellClick={this.handleCellClick}
                         players={this.props.model.players}
-                        isGameOver={this.state.winner ? true : false} // Could use this.props.model.wasGameOver but it has a different purpose
+                        isGameOver={(winner && winner != app.TIE_GAME) ? true : false} // Could use this.props.model.wasGameOver but it has a different purpose
                         winningSolution={this.state.winningSolution}
                    />
         }, this);
@@ -115,7 +136,7 @@ var Game = React.createClass({
 					{Rows}
                 </div>
                 <div className="player-turn">
-                    <PlayerTurn player={this.getWhoseTurn()} winner={this.state.winner}/>
+                    <PlayerTurn player={this.getWhoseTurn()} winner={winner}/>
                 </div>
             </div>
         );
@@ -247,11 +268,15 @@ var ScoreBoard = React.createClass({
 // TODO: Rename PlayerTurn to something else
 var PlayerTurn = React.createClass({
     render: function () {
-        var status;
-        if(this.props.winner) {
-            status = this.props.winner.displayName + " wins!"
+        var status,
+            winner = this.props.winner;
+        if(winner === app.TIE_GAME) {
+            status = 'Tie Game!';
+        }
+        else if(winner) {
+            status = winner.displayName + " wins!";
         } else {
-            status = this.props.player.displayName + "'s turn"
+            status = this.props.player.displayName + "'s turn";
         }
         return (
             <p>

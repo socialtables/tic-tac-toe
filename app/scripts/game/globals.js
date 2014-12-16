@@ -15,6 +15,8 @@
 
 var app = {};
 
+app.TIE_GAME = 'tie';
+
 app.solutions = {
     '0': [
         [1,2], // row0
