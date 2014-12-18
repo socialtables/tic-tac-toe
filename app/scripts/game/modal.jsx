@@ -1,37 +1,32 @@
-var React = require('react'),
-    app = require('./globals'),
-    mountNode = $("#modal-container")[0];
+var React = require('react');
 
 var BootstrapButton = React.createClass({
-    render: function() {
+    render: function () {
         return (
-			<button onClick={this.props.handleClick.bind(undefined)} className="btn btn-primary">New Game</button>
+			<button onClick={this.props.handleClick.bind(undefined)} className="btn btn-primary">New Players</button>
         );
     }
 });
 
 var BootstrapModal = React.createClass({
-    componentDidMount: function() {
+    componentDidMount: function () {
         $(this.getDOMNode()).modal();
     },
-    close: function() {
+    close: function () {
         $(this.getDOMNode()).modal('hide');
     },
-    open: function() {
+    open: function () {
         $(this.getDOMNode()).modal('show');
     },
     handleSubmit: function (event) {
         var playerX = this.refs.playerX.getDOMNode().value;
         var playerO = this.refs.playerO.getDOMNode().value;
-        if(playerX) {
-            app.PLAYERX.displayName = playerX;
-        }
-        if(playerO) {
-            app.PLAYERO.displayName = playerO;
-        }
+        this.refs.playerO.getDOMNode().value = '';
+        this.refs.playerX.getDOMNode().value = '';
+        this.props.handleSubmit(playerX, playerO);
         this.close();
     },
-    render: function() {
+    render: function () {
         return (
             <div className="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
@@ -69,26 +64,28 @@ var BootstrapModal = React.createClass({
                 </div>
             </div>
         );
-    },
+    }
 });
 
 var Modal = React.createClass({
-    render: function() {
+    render: function () {
         return (
             <div>
-                <BootstrapModal ref="modal" />
+                <BootstrapModal handleSubmit={this.handleSubmit} ref="modal" />
                 <BootstrapButton handleClick={this.openModal} className="btn-default"/>
             </div>
         );
     },
-    openModal: function() {
+    openModal: function () {
         this.refs.modal.open();
     },
-    closeModal: function() {
+    closeModal: function () {
         this.refs.modal.close();
+    },
+    handleSubmit: function (newPlayerX, newPlayerO) {
+		this.props.model.createNewPlayers(newPlayerX, newPlayerO);
+        this.props.forceUpdateOnParent();
     }
 });
 
-module.exports = function () {
-    React.render(<Modal />, mountNode);
-}
+module.exports = Modal;

@@ -1,16 +1,8 @@
 var React = require('react'),
-    BackboneReactMixin = require('backbone-react-component'),
-    mountNode = $("#jumbotron")[0],
     app = require('./globals'),
-    modal = require('./modal.jsx'),
-    _ = require('underscore'),
-    PlayerModel = require('./PlayerModel');
-
-//var Players = require('../collections/Players');
-//var Player = require('../collections/Player');
+    _ = require('underscore');
 
 var Game = React.createClass({
-    //mixins: [BackboneReactMixin],
     getInitialState: function () {
 		var winningSolution = [],
             winner = false;
@@ -83,27 +75,15 @@ var Game = React.createClass({
         }
         return false;
     },
-    getNewPlayers: function () {
-        $('#modal').modal();
-    },
     resetScoreBoard: function () {
         _.each(this.props.model.players, function (player) {
             player.wins = 0;
         });
     },
-    newGame: function (event) {
-        this.resetScoreBoard();
-        this.getNewPlayers();
-    },
-    componentDidUpdate: function (prevProps, prevState) {
-        //if(this.state.winner) {
-        //    setTimeout(function() {
-        //        //TODO: set pointer that is loading or display somehow that it's clearingBoard
-        //        // "Game over. Clearing board.."
-        //    }.bind(this), 3000);
-        //}
-        ;
-    },
+    //newGame: function (event) {
+    //    this.resetScoreBoard();
+    //    this.getNewPlayers();
+    //},
     getWhoseTurn: function() {
         var playerX = this.props.model.players.PLAYERX,
             playerO = this.props.model.players.PLAYERO;
@@ -286,8 +266,4 @@ var PlayerTurn = React.createClass({
     }
 });
 
-playerModel = new PlayerModel('tic-tac-toe');
-
-module.exports = function () {
-    React.render(<Game model={playerModel}/>, mountNode);
-};
+module.exports = Game;

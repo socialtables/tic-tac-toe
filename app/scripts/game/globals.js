@@ -1,18 +1,3 @@
-//var app = {
-//    PLAYERX: {
-//        wins: 0,
-//        displayName: 'Player X',
-//        cells: [],
-//        keyName: 'playerX'
-//    },
-//    PLAYERO: {
-//        wins: 0,
-//        displayName: 'Player O',
-//        cells: [],
-//        keyName: 'playerO'
-//    }
-//}
-
 var app = {};
 
 app.TIE_GAME = 'tie';
