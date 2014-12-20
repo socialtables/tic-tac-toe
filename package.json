@@ -2,9 +2,8 @@
   "name": "tic-tac-toe",
   "version": "0.0.0",
   "private": true,
-  "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node ./bin/www"
   },
   "engines": {
     "node": "0.10.x"
