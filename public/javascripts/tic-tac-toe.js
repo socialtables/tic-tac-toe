@@ -83,7 +83,13 @@
         <div className='small-5 columns' id='board'>
           {
             cells.map(function(player, index){
-              return (<Cell player={player} cellIndex={index} playerTurn={playerTurn} updateGameStatus={updateGameStatus}/>);
+              return (
+                <Cell 
+                  player={player} 
+                  cellIndex={index} 
+                  playerTurn={playerTurn} 
+                  updateGameStatus={updateGameStatus}/>
+              );
             })
           }
         </div>
