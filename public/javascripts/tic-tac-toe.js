@@ -24,11 +24,11 @@
       var cells = this.state.cells,
           playerTurn = this.playerTurn;
 
-      return <div> 
-        <div id='board'>
+      return <div className='row'> 
+        <div className='small-5 columns' id='board'>
           {
             cells.map(function(player, index){
-              return <Cell player={player} cellIndex={index} playerTurn={playerTurn}/>;
+              return (<Cell player={player} cellIndex={index} playerTurn={playerTurn}/>);
             })
           }
         </div>
@@ -46,7 +46,7 @@
     },
     render: function() {
       var player = this.props.player;
-      return <div className='cell' onClick={this.clickCell}>{player}</div>;
+      return <div className='cell small-4 columns text-center' onClick={this.clickCell}>{player}</div>;
     }
   });
 
@@ -55,7 +55,7 @@
       var board = this.props.board;
           player = this.props.player;
 
-      return <div id='status'>
+      return <div className='small-4 columns' id='status'>
         <h1>{ player + '\'s' } turn to go.</h1>
         <PlayAgainButton board={board}/>
       </div>;

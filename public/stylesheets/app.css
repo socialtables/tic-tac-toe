@@ -8,17 +8,14 @@ a {
 }
 
 #board {
-  position: absolute;
   width: 66vh;
   height: 66vh;
-  border: 5px solid red;
-  
 }
 
 .cell {
+  font-size: 19vh;
   float: left;
-  width: 21vh;
-  height: 21vh;
-  border: 1px solid red;
+  height: 22vh;
+  border: 1px solid #83AFE1;
 }
 
