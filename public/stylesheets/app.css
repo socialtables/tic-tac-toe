@@ -23,11 +23,6 @@ a {
   background-color: #C3F7A0;
 }
 
-.easein-leave {
-  opacity: 1;
-  transition: opacity .5s ease-in;
-}
-
-.easein-leave.easein-leave-active {
-  opacity: 0.01;
+#status {
+  width: 30vh;
 }
