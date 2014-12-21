@@ -31,6 +31,8 @@
       if( gameStatus != 'playing' ) { return; }
 
       cells[cellIndex] = player;
+      player = player === 'X' ? 'O' : 'X';
+
       this.setState({
         cells: cells, 
         player: player, 
@@ -38,15 +40,15 @@
         winner: winner
       });
 
+      this.updateGameStatus(player);
     },
     boardFull: function() {
       var cells = this.state.cells;
 
       return cells.indexOf(' ') === -1
     },
-    updateGameStatus: function() {
+    updateGameStatus: function(player) {
       var cells = this.state.cells,
-          player = this.state.player,
           winner = '',
           gameStatus = this.state.gameStatus;
 
@@ -69,44 +71,42 @@
 
       this.setState({
         cells: cells,
-        player: (player === 'X' ? 'O' : 'X'),
+        player: player,
         gameStatus: gameStatus,
         winner: winner
       });
     },
     render: function() {
       var cells = this.state.cells,
-          playerTurn = this.playerTurn,
-          updateGameStatus = this.updateGameStatus;
+          playerTurn = this.playerTurn;
 
-      return (<div className='row'> 
-        <div className='small-5 columns' id='board'>
-          {
-            cells.map(function(player, index){
-              return (
-                <Cell 
+      return (
+        <div className='row'> 
+          <div className='small-5 columns' id='board'>
+            {
+              cells.map(function(player, index){
+                return (
+                  <Cell 
                   player={player} 
+                  key={index} 
                   cellIndex={index} 
-                  playerTurn={playerTurn} 
-                  updateGameStatus={updateGameStatus}/>
-              );
-            })
-          }
+                  playerTurn={playerTurn}/>
+                );
+              })
+            }
+          </div>
+          <Status board={this} player={this.state.player}/>
         </div>
-        <Status board={this} player={this.state.player}/>
-      </div>);
+      );
     }
   });
-
 
   var Cell = React.createClass({
     clickCell: function() {
       var cellIndex = this.props.cellIndex,
-          playerTurn = this.props.playerTurn,
-          updateGameStatus = this.props.updateGameStatus;
+          playerTurn = this.props.playerTurn;
 
       playerTurn( cellIndex );
-      updateGameStatus();
     },
     render: function() {
       var player = this.props.player;
@@ -161,8 +161,5 @@
     }
   });
 
-  React.renderComponent(
-    <Board/>,
-    $('#tic-tac-toe')[0]
-  );
+  React.render(<Board/>, $('#tic-tac-toe')[0]);
 })();
