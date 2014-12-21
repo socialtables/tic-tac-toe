@@ -24,7 +24,8 @@ app.use(express.static(__dirname + '/bower_components'));
 app.locals.scripts = [
   '/jquery/dist/jquery.min.js', 
   '/react/react-with-addons.min.js',
-  '/react/JSXTransformer.js'
+  '/react/JSXTransformer.js',
+  '/javascripts/foundation/foundation.min.js'
 ];
 
 app.use('/', routes);
