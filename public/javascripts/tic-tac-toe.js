@@ -132,7 +132,7 @@
       }
 
       return (
-        <div className='small-4 columns' id='status'>
+        <div className='small-4 columns row' id='status'>
           <h1 className={ bgType }>
             { statusMsg }
           </h1>
