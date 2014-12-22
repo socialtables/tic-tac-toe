@@ -3,6 +3,7 @@
     getInitialState: function() {
       return this.boardDefaults();
     },
+
     boardDefaults: function() {
       return {
         cells: [' ',' ',' ',
@@ -13,6 +14,7 @@
         winner: ''
       }
     },
+
     winConditions: [[0,1,2],
                     [3,4,5],
                     [6,7,8],
@@ -21,38 +23,29 @@
                     [0,3,6],
                     [1,4,7],
                     [2,5,8]],
+
     playerTurn: function(cellIndex) {
       var player = this.state.player,
           cells = this.state.cells,
           gameStatus = this.state.gameStatus;
 
-      if( cells[cellIndex] !== ' ' ) { return; }
-      if( gameStatus !== 'playing' ) { return; }
+      if (cells[cellIndex] !== ' ' || gameStatus !== 'playing') { return; }
 
       cells[cellIndex] = player;
-
       this.updateGame(cells);
     },
-    boardFull: function(cells) {
-      return cells.indexOf(' ') === -1
-    },
+
     updateGame: function(cells) {
       var winner = '',
           player = this.state.player,
           gameStatus = this.state.gameStatus;
 
-      if( this.boardFull(cells) ) { gameStatus = 'draw'; }
+      if (this.boardFull(cells)) { gameStatus = 'draw'; }
 
-      this.winConditions.forEach(function(checking){
-        var row = checking.map(function(cellIndex){
-          return cells[cellIndex];
-        }).join('');
-
-        if(row === 'XXX' || row === 'OOO') {
-          winner = player;
-          gameStatus = 'over';
-        } 
-      });
+      if (this.gameWon(cells)) { 
+        gameStatus = 'over';
+        winner = player;
+      }
 
       this.setState({
         cells: cells,
@@ -61,6 +54,21 @@
         winner: winner
       });
     },
+
+    boardFull: function(cells) {
+      return cells.indexOf(' ') === -1
+    },
+
+    gameWon: function(cells) {
+      return this.winConditions.some(function(checking){
+        var row = checking.map(function(cellIndex){
+          return cells[cellIndex];
+        }).join('');
+
+        return row === 'XXX' || row === 'OOO'
+      });
+    },
+
     render: function() {
       var cells = this.state.cells,
           playerTurn = this.playerTurn;
@@ -93,6 +101,7 @@
 
       playerTurn( cellIndex );
     },
+
     render: function() {
       var player = this.props.player;
       return (
@@ -103,7 +112,6 @@
       );
     }
   });
-
 
   var Status = React.createClass({
     render: function() {
@@ -127,7 +135,7 @@
           <h1 className={ bgType }>
             { statusMsg }
           </h1>
-          <PlayAgainButton board={board}/>
+          <PlayAgainButton board={ board }/>
         </div>
       );
     }
@@ -139,6 +147,7 @@
       var board = this.props.board;
       board.setState(board.boardDefaults());
     },
+
     render: function() {
       return (<button onClick={this.resetBoard}>
         Play Again
