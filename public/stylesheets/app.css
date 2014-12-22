@@ -1,0 +1,28 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#board {
+  width: 48vh;
+  height: 48vh;
+}
+
+.cell {
+  font-size: 14vh;
+  float: left;
+  height: 16vh;
+  border: 1px solid #83AFE1;
+}
+
+.win {
+  background-color: #C3F7A0;
+}
+
+#status {
+  width: 30vh;
+}
