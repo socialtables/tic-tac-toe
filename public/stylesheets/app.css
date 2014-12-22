@@ -8,14 +8,14 @@ a {
 }
 
 #board {
-  width: 66vh;
-  height: 66vh;
+  width: 48vh;
+  height: 48vh;
 }
 
 .cell {
-  font-size: 19vh;
+  font-size: 14vh;
   float: left;
-  height: 22vh;
+  height: 16vh;
   border: 1px solid #83AFE1;
 }
 
