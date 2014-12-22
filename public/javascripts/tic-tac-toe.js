@@ -24,54 +24,39 @@
     playerTurn: function(cellIndex) {
       var player = this.state.player,
           cells = this.state.cells,
-          gameStatus = this.state.gameStatus,
-          winner = this.state.winner;
-
-      if( cells[cellIndex] !== ' ' ) { return; }
-      if( gameStatus != 'playing' ) { return; }
-
-      cells[cellIndex] = player;
-      player = player === 'X' ? 'O' : 'X';
-
-      this.setState({
-        cells: cells, 
-        player: player, 
-        gameStatus: gameStatus,
-        winner: winner
-      });
-
-      this.updateGameStatus(player);
-    },
-    boardFull: function() {
-      var cells = this.state.cells;
-
-      return cells.indexOf(' ') === -1
-    },
-    updateGameStatus: function(player) {
-      var cells = this.state.cells,
-          winner = '',
           gameStatus = this.state.gameStatus;
 
-      if(gameStatus !== 'playing') { return; }
-      if(this.boardFull()) { gameStatus = 'draw';}
+      if( cells[cellIndex] !== ' ' ) { return; }
+      if( gameStatus !== 'playing' ) { return; }
+
+      cells[cellIndex] = player;
+
+      this.updateGame(cells);
+    },
+    boardFull: function(cells) {
+      return cells.indexOf(' ') === -1
+    },
+    updateGame: function(cells) {
+      var winner = '',
+          player = this.state.player,
+          gameStatus = this.state.gameStatus;
+
+      if( this.boardFull(cells) ) { gameStatus = 'draw'; }
 
       this.winConditions.forEach(function(checking){
         var row = checking.map(function(cellIndex){
           return cells[cellIndex];
         }).join('');
 
-        if(row === 'XXX') {
-          winner = 'X';
+        if(row === 'XXX' || row === 'OOO') {
+          winner = player;
           gameStatus = 'over';
-        } else if(row === 'OOO') {
-          winner = 'O';
-          gameStatus = 'over';
-        }
+        } 
       });
 
       this.setState({
         cells: cells,
-        player: player,
+        player: player = player === 'X' ? 'O' : 'X',
         gameStatus: gameStatus,
         winner: winner
       });
