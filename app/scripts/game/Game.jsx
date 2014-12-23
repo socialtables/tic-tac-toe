@@ -1,4 +1,6 @@
 var React = require('react'),
+    GameStatus = require('./GameStatus.jsx'),
+    Scoreboard = require('./Scoreboard.jsx'),
     app = require('./globals'),
     _ = require('underscore');
 
@@ -93,14 +95,14 @@ var Game = React.createClass({
         return  (
             <div>
 				<div className="scoreboard">
-					<ScoreBoard player={this.props.model.players.PLAYERX} className="pull-left"/>
-					<ScoreBoard player={this.props.model.players.PLAYERO} className="pull-right"/>
+					<Scoreboard player={this.props.model.players.PLAYERX} className="pull-left"/>
+					<Scoreboard player={this.props.model.players.PLAYERO} className="pull-right"/>
 				</div>
                 <div className="game">
 					{Rows}
                 </div>
                 <div className="player-turn">
-                    <PlayerTurn player={this.getWhoseTurn()} winner={winner}/>
+                    <GameStatus player={this.getWhoseTurn()} winner={winner}/>
                 </div>
             </div>
         );
@@ -194,43 +196,6 @@ var Cell = React.createClass({
 				</div>
             </div>
         );
-    }
-});
-
-var ScoreBoard = React.createClass({
-    render: function () {
-        var player = this.props.player;
-        return (
-            <div className={"scoreboard-player " + this.props.className}>
-                <div>
-				{player.displayName}
-                </div>
-                <div>
-                {player.wins}
-                </div>
-            </div>
-        )
-    }
-});
-
-// TODO: Rename PlayerTurn to something else
-var PlayerTurn = React.createClass({
-    render: function () {
-        var status,
-            winner = this.props.winner;
-        if(winner === app.TIE_GAME) {
-            status = 'Tie Game!';
-        }
-        else if(winner) {
-            status = winner.displayName + " wins!";
-        } else {
-            status = this.props.player.displayName + "'s turn";
-        }
-        return (
-            <p>
-            {status}
-            </p>
-        )
     }
 });
 

@@ -1,8 +1,8 @@
 var React = window.React = require('react'),
     mountNode = document.body,
-    NewPlayersBtn = require("./game/newPlayersBtn.jsx"),
-    Game = require("./game/game.jsx"),
-    NewGameBtn = require("./game/newGameBtn.jsx"),
+    NewPlayersBtn = require("./buttons/NewPlayersBtn.jsx"),
+    Game = require("./game/Game.jsx"),
+    NewGameBtn = require("./buttons/NewGameBtn.jsx"),
     model = require('./models/modelLocalStorage');
 
 window.React = React;
