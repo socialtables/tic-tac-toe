@@ -3,15 +3,12 @@ var React = require('react');
 var BootstrapButton = React.createClass({
     render: function () {
         return (
-			<button onClick={this.props.handleClick.bind(undefined)} className="btn btn-primary">New Players</button>
+			<button onClick={this.props.handleClick} className="btn-new-player btn btn-primary">New Players</button>
         );
     }
 });
 
 var BootstrapModal = React.createClass({
-    componentDidMount: function () {
-        $(this.getDOMNode()).modal();
-    },
     close: function () {
         $(this.getDOMNode()).modal('hide');
     },
@@ -67,11 +64,16 @@ var BootstrapModal = React.createClass({
     }
 });
 
-var Modal = React.createClass({
+var NewPlayers = React.createClass({
+    componentDidMount: function () {
+        if(this.props.model.isNewKey()) {
+            this.refs.modal.open();
+        }
+    },
     render: function () {
         return (
             <div>
-                <BootstrapModal handleSubmit={this.handleSubmit} ref="modal" />
+                <BootstrapModal handleSubmit={this.props.handleModalSubmit} ref="modal" />
                 <BootstrapButton handleClick={this.openModal} className="btn-default"/>
             </div>
         );
@@ -81,11 +83,7 @@ var Modal = React.createClass({
     },
     closeModal: function () {
         this.refs.modal.close();
-    },
-    handleSubmit: function (newPlayerX, newPlayerO) {
-		this.props.model.createNewPlayers(newPlayerX, newPlayerO);
-        this.props.forceUpdateOnParent();
     }
 });
 
-module.exports = Modal;
+module.exports = NewPlayers;

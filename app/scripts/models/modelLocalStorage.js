@@ -1,5 +1,22 @@
 var _ = require('underscore');
 
+var LocalStorage = {
+    getItem: function (key) {
+        if(Modernizr.localstorage) {
+            return localStorage.getItem(key);
+        } else {
+            console.log("Sorry, this browser does not support localStorage!");
+        }
+    },
+    setItem: function (key, string) {
+        if(Modernizr.localstorage) {
+            return localStorage.setItem(key, string);
+        } else {
+            console.log("Sorry, this browser does not support localStorage!");
+        }
+    }
+};
+
 var Model = (function () {
     function createPlayers (newPlayerX, newPlayerO) {
         var playerX = newPlayerX || 'Player X';
@@ -20,23 +37,29 @@ var Model = (function () {
         }
     }
 
+    var isNewKey = false;
+
     function Model (key) {
         this.key = key;
         this.wasGameOver = false;
         this.players = createPlayers();
         var storage,
             model;
-        storage = localStorage.getItem(key);
+		storage = LocalStorage.getItem(key);
         if(storage) {
             model = JSON.parse(storage);
             this.players = model.players;
             this.wasGameOver = model.wasGameOver;
         }
         if(this.players && this.wasGameOver) {
-            clearPlayerCells();
+            this.clearPlayerCells();
         }
         this.store();
     }
+
+    Model.prototype.isNewKey = function () {
+		return isNewKey;
+    };
 
     Model.prototype.store = function () {
         if (this.players) {
@@ -44,7 +67,12 @@ var Model = (function () {
                 players: this.players,
                 wasGameOver: this.wasGameOver
             };
-            return localStorage.setItem(this.key, JSON.stringify(data));
+            if(LocalStorage.getItem(this.key)) {
+                isNewKey = false;
+            } else {
+                isNewKey = true;
+            };
+            return LocalStorage.setItem(this.key, JSON.stringify(data));
         }
     };
 
@@ -58,6 +86,11 @@ var Model = (function () {
         this.players = createPlayers(newPlayerX, newPlayerO);
         this.wasGameOver = false;
         this.store();
+    };
+
+    Model.prototype.makeNewGame = function () {
+        this.clearPlayerCells();
+        this.wasGameOver = false;
     }
 
     return Model;

@@ -39,33 +39,26 @@ var Game = React.createClass({
         player.cells.push(location);
         if(winningSolution = this.gameOver(player, location) ) {
             this.updateScoreboard(player);
-            this.setState({
-                winningSolution: winningSolution,
-                winner: player
-            });
-            this.props.model.wasGameOver = true;
-			setTimeout(function() {
-				this.props.model.clearPlayerCells();
-                this.props.model.wasGameOver = false;
-                this.setState(this.getInitialState());
-                this.props.model.store();
-			}.bind(this), 3000);
+            this.cleanUp(player, winningSolution);
         } else if(this.isTieGame()) {
-            this.setState({
-                winningSolution: '',
-                winner: app.TIE_GAME
-            });
-            this.props.model.wasGameOver = true;
-            setTimeout(function() {
-                this.props.model.clearPlayerCells();
-                this.props.model.wasGameOver = false;
-                this.setState(this.getInitialState());
-                this.props.model.store();
-            }.bind(this), 3000);
+            this.cleanUp(app.TIE_GAME, '');
         } else {
             this.forceUpdate();
         }
         this.props.model.store();
+    },
+    cleanUp: function (winner, winningSolution) {
+        this.setState({
+            winningSolution: winningSolution,
+            winner: winner
+        });
+        this.props.model.wasGameOver = true;
+        setTimeout(function() {
+            this.props.model.clearPlayerCells();
+            this.props.model.wasGameOver = false;
+            this.setState(this.getInitialState());
+            this.props.model.store();
+        }.bind(this), 3000);
     },
     isTieGame: function() {
         var playerX = this.props.model.players.PLAYERX,
@@ -75,15 +68,6 @@ var Game = React.createClass({
         }
         return false;
     },
-    resetScoreBoard: function () {
-        _.each(this.props.model.players, function (player) {
-            player.wins = 0;
-        });
-    },
-    //newGame: function (event) {
-    //    this.resetScoreBoard();
-    //    this.getNewPlayers();
-    //},
     getWhoseTurn: function() {
         var playerX = this.props.model.players.PLAYERX,
             playerO = this.props.model.players.PLAYERO;
@@ -212,22 +196,6 @@ var Cell = React.createClass({
         );
     }
 });
-
-//var NewGame = React.createClass({
-//    handleClick: function (event) {
-//        this.props.handleClick(event);
-//    },
-//    render: function () {
-//        //data-toggle="modal" data-target="#modal">
-//       return (
-//           <div>
-//			   <button onClick={this.handleClick} className="btn btn-primary">
-//                    New Game
-//               </button>
-//		   </div>
-//        )
-//    }
-//});
 
 var ScoreBoard = React.createClass({
     render: function () {

@@ -1,28 +1,42 @@
 var React = window.React = require('react'),
     mountNode = document.body,
-    Modal = require("./game/modal.jsx"),
+    NewPlayersBtn = require("./game/newPlayersBtn.jsx"),
     Game = require("./game/game.jsx"),
+    NewGameBtn = require("./game/newGameBtn.jsx"),
     model = require('./models/modelLocalStorage');
 
+window.React = React;
+
 var App = React.createClass({
+    handleModalSubmit: function (newPlayerX, newPlayerO) {
+        this.props.model.createNewPlayers(newPlayerX, newPlayerO);
+        this.forceUpdate();
+    },
+    handleNewGameClick: function (event) {
+        this.props.model.makeNewGame();
+        this.forceUpdate();
+    },
     render: function () {
         return (
 			<div className="container">
 				<div className="row">
-                    <div className="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                    <div className="btn-container col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <NewGameBtn handleClick={this.handleNewGameClick} />
+					</div>
+                    <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                         <h1>Tic Tac Toe!</h1>
                     </div>
-                    <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                    <div className="btn-container col-xs-4 col-sm-4 col-md-4 col-lg-4">
                         <div id="modal-container">
-                            <Modal model={this.props.model} forceUpdateOnParent={this.forceUpdate.bind(this)} />
+                            <NewPlayersBtn model={this.props.model} handleModalSubmit={this.handleModalSubmit} />
                         </div>
                     </div>
-					<div id="jumbotron" className="jumbotron col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					    <Game model={this.props.model} />
-					</div>
-				    <div className="footer">
-				        <p>By Nick DeCoursin :)</p>
-				    </div>
+				</div>
+				<div id="jumbotron" className="jumbotron col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<Game model={this.props.model} />
+				</div>
+				<div className="footer">
+					<p>By Nick DeCoursin :)</p>
 				</div>
 			</div>
         )
