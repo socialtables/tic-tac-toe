@@ -43,7 +43,4 @@ var App = React.createClass({
     }
 });
 
-module.exports = (function () {
-    React.render(<App model={model}/>, mountNode);
-})();
-
+React.render(<App model={model}/>, mountNode);
