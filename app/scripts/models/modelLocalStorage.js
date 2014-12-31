@@ -1,5 +1,6 @@
 var _ = require('underscore');
 
+// Tests localStorage with Modernizer
 var LocalStorage = {
     getItem: function (key) {
         if(Modernizr.localstorage) {
@@ -18,6 +19,7 @@ var LocalStorage = {
 };
 
 var Model = (function () {
+    var isNewKey = false;
     function createPlayers (newPlayerX, newPlayerO) {
         var playerX = newPlayerX || 'Player X';
         var playerO = newPlayerO || 'Player O';
@@ -36,16 +38,13 @@ var Model = (function () {
             }
         }
     }
-
-    var isNewKey = false;
-
-    function Model (key) {
+    return function (key) {
         this.key = key;
         this.wasGameOver = false;
         this.players = createPlayers();
         var storage,
             model;
-		storage = LocalStorage.getItem(key);
+        storage = LocalStorage.getItem(key);
         if(storage) {
             model = JSON.parse(storage);
             this.players = model.players;
@@ -56,45 +55,37 @@ var Model = (function () {
         }
         this.store();
     }
+})();
 
-    Model.prototype.isNewKey = function () {
-		return isNewKey;
-    };
-
-    Model.prototype.store = function () {
+Model.prototype = _.extend(Model.prototype, {
+    isNewKey: function () {
+        return isNewKey;
+    },
+    store: function () {
         if (this.players) {
             var data = {
                 players: this.players,
                 wasGameOver: this.wasGameOver
             };
-            if(LocalStorage.getItem(this.key)) {
-                isNewKey = false;
-            } else {
-                isNewKey = true;
-            };
+            isNewKey = !LocalStorage.getItem(this.key);
             return LocalStorage.setItem(this.key, JSON.stringify(data));
         }
-    };
-
-    Model.prototype.clearPlayerCells = function () {
-        _.each(this.players, function (player) {
-            player.cells = []
-        });
-    };
-
-    Model.prototype.createNewPlayers = function (newPlayerX, newPlayerO) {
-        this.players = createPlayers(newPlayerX, newPlayerO);
-        this.wasGameOver = false;
-        this.store();
-    };
-
-    Model.prototype.makeNewGame = function () {
-        this.clearPlayerCells();
-        this.wasGameOver = false;
-    }
-
-    return Model;
-})();
+    },
+    clearPlayerCells: function () {
+		_.each(this.players, function (player) {
+			player.cells = []
+		});
+	},
+	createNewPlayers: function (newPlayerX, newPlayerO) {
+		this.players = createPlayers(newPlayerX, newPlayerO);
+		this.wasGameOver = false;
+		this.store();
+	},
+	makeNewGame: function () {
+		this.clearPlayerCells();
+		this.wasGameOver = false;
+	}
+});
 
 model = new Model('tic-tac-toe');
 
