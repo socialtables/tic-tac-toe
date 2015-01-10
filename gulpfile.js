@@ -1,15 +1,11 @@
 'use strict';
 
-var gulp = require('gulp');
-var del = require('del');
-
-
+var gulp = require('gulp'),
+	del = require('del'),
+	webpackConfig = require('./webpack.config.js');
 
 // Load plugins
 var $ = require('gulp-load-plugins')();
-var browserify = require('browserify');
-var source = require('vinyl-source-stream');
-
 
 // Styles
 gulp.task('styles', function () {
@@ -23,22 +19,6 @@ gulp.task('styles', function () {
         .pipe($.autoprefixer('last 1 version'))
         .pipe(gulp.dest('dist/styles'))
         .pipe($.size());
-});
-
-// Scripts
-gulp.task('scripts', function () {
-//    return browserify({entries: ['./app/scripts/App.js']})
-    return browserify({entries: ['./app/scripts/App.jsx'], debug:true})
-            .bundle()
-            .pipe(source('app.js'))
-            .pipe(gulp.dest('dist/scripts'));
-});
-
-
-gulp.task('jade', function () {
-    return gulp.src('app/template/*.jade')
-        .pipe($.jade({ pretty: true }))
-        .pipe(gulp.dest('dist'));
 });
 
 // HTML
@@ -61,16 +41,13 @@ gulp.task('images', function () {
         .pipe($.size());
 });
 
-
-
 // Clean
 gulp.task('clean', function (cb) {
-    del(['dist/styles', 'dist/scripts', 'dist/images'], cb);
+    del(['dist/styles', 'dist/images'], cb);
 });
 
-
 // Bundle
-gulp.task('bundle', ['styles', 'scripts', 'bower'], function(){
+gulp.task('bundle', ['styles', 'bower'], function(){
     return gulp.src('./app/*.html')
                .pipe($.useref.assets())
                .pipe($.useref.restore())
@@ -82,23 +59,19 @@ gulp.task('bundle', ['styles', 'scripts', 'bower'], function(){
 gulp.task('build', ['html', 'bundle', 'images']);
 
 // Default task
-gulp.task('default', ['clean', 'build']);
-
-// Webserver
-gulp.task('serve', function () {
-    gulp.src('dist')
-        .pipe($.webserver({
-            livereload: true,
-            port: 9000,
-			host: 'tictactoe.dev'
-        }));
-});
+//gulp.task('default', ['clean', 'build']);
 
 // Bower helper
 gulp.task('bower', function() {
     gulp.src('app/bower_components/**/*.js', {base: 'app/bower_components'})
         .pipe(gulp.dest('dist/bower_components/'));
+});
 
+// Webpack
+gulp.task('webpack', function() {
+	return $.webpack(webpackConfig);
+//	return gulp.src('app/scripts/index.jsx')
+//			.pipe($.webpack(webpackConfig))
 });
 
 gulp.task('json', function() {
@@ -106,9 +79,8 @@ gulp.task('json', function() {
         .pipe(gulp.dest('dist/scripts/'));
 });
 
-
 // Watch
-gulp.task('watch', ['html', 'bundle', 'serve'], function () {
+gulp.task('watch', ['html', 'bundle'], function () {
 
     // Watch .json files
     gulp.watch('app/scripts/**/*.json', ['json']);
@@ -116,18 +88,8 @@ gulp.task('watch', ['html', 'bundle', 'serve'], function () {
     // Watch .html files
     gulp.watch('app/*.html', ['html']);
 
-    
     // Watch .scss files
     gulp.watch('app/styles/**/*.scss', ['styles']);
-
-    // Watch .jade files
-    gulp.watch('app/template/**/*.jade', ['jade', 'html']);
-
-
-
-
-    // Watch .js files
-    gulp.watch(['app/scripts/**/*.js', 'app/scripts/**/*.jsx'], ['scripts']);
 
     // Watch image files
     gulp.watch('app/images/**/*', ['images']);
