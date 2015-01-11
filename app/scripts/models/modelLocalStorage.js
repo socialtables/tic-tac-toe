@@ -1,22 +1,12 @@
-var _ = require('underscore');
+'use strict';
 
-// Tests localStorage with Modernizer
-var LocalStorage = {
-    getItem: function (key) {
-        if(Modernizr.localstorage) {
-            return localStorage.getItem(key);
-        } else {
-            console.log("Sorry, this browser does not support localStorage!");
-        }
-    },
-    setItem: function (key, string) {
-        if(Modernizr.localstorage) {
-            return localStorage.setItem(key, string);
-        } else {
-            console.log("Sorry, this browser does not support localStorage!");
-        }
-    }
-};
+var _ = require('underscore');
+//	Modernizr = require('modernizr/modernizr.js');
+
+if (typeof localStorage === "undefined" || localStorage === null) {
+  var LocalStorage = require('node-localstorage').LocalStorage;
+  var localStorage = new LocalStorage('./scratch');
+}
 
 var createPlayers = function (newPlayerX, newPlayerO) {
     var playerX = newPlayerX || 'Player X';
@@ -37,15 +27,16 @@ var createPlayers = function (newPlayerX, newPlayerO) {
     }
 }
 
+var isNewKey = false;
+
 var Model = (function () {
-    var isNewKey = false;
     return function (key) {
         this.key = key;
         this.wasGameOver = false;
         this.players = createPlayers();
         var storage,
             model;
-        storage = LocalStorage.getItem(key);
+        storage = localStorage.getItem(key);
         if(storage) {
             model = JSON.parse(storage);
             this.players = model.players;
@@ -68,8 +59,8 @@ Model.prototype = _.extend(Model.prototype, {
                 players: this.players,
                 wasGameOver: this.wasGameOver
             };
-            isNewKey = !LocalStorage.getItem(this.key);
-            return LocalStorage.setItem(this.key, JSON.stringify(data));
+            isNewKey = !localStorage.getItem(this.key);
+            return localStorage.setItem(this.key, JSON.stringify(data));
         }
     },
     clearPlayerCells: function () {
@@ -88,6 +79,6 @@ Model.prototype = _.extend(Model.prototype, {
 	}
 });
 
-model = new Model('tic-tac-toe');
+var model = new Model('tic-tac-toe');
 
 module.exports = model;

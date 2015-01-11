@@ -1,4 +1,4 @@
-var React = window.React = require('react'),
+var React = require('react'),
     NewPlayersBtn = require("./buttons/NewPlayersBtn.jsx"),
     Game = require("./game/Game.jsx"),
     NewGameBtn = require("./buttons/NewGameBtn.jsx");

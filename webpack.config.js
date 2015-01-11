@@ -1,4 +1,5 @@
-var path = require('path');
+var path = require('path'),
+	webpack = require('webpack');
 
 module.exports = {
   cache: true,
@@ -24,8 +25,14 @@ module.exports = {
     ]
   },
   resolve: {
-	  extensions: ['', '.js', '.scss']
+	  extensions: ['', '.js', '.scss'],
+	  root: [path.join(__dirname, 'dist', 'bower_components')]
   },
+  plugins: [
+	  new webpack.ResolverPlugin([
+		  new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
+	  ], ["normal", "loader"])
+  ],
   debug: true,
   devtool: "#inline-source-map"
 };

@@ -10,7 +10,10 @@
   "dependencies": {
     "backbone": "^1.1.2",
     "backbone-react-component": "^0.7.2",
-    "jquery": "^2.1.1"
+    "gulp-bower": "0.0.7",
+    "jquery": "^2.1.1",
+    "node-jsx": "^0.12.4",
+    "node-localstorage": "^0.3.6"
   },
   "devDependencies": {
     "bootstrap-sass": "^3.3.1",

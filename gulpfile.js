@@ -21,13 +21,13 @@ gulp.task('styles', function () {
         .pipe($.size());
 });
 
-// HTML
-gulp.task('html', function () {
-    return gulp.src('app/*.html')
-        .pipe($.useref())
-        .pipe(gulp.dest('dist'))
-        .pipe($.size());
-});
+//// HTML
+//gulp.task('html', function () {
+//    return gulp.src('app/*.html')
+//        .pipe($.useref())
+//        .pipe(gulp.dest('dist'))
+//        .pipe($.size());
+//});
 
 // Images
 gulp.task('images', function () {
@@ -47,7 +47,7 @@ gulp.task('clean', function (cb) {
 });
 
 // Bundle
-gulp.task('bundle', ['styles', 'bower'], function(){
+gulp.task('bundle', ['styles', 'bower', 'webpack'], function(){
     return gulp.src('./app/*.html')
                .pipe($.useref.assets())
                .pipe($.useref.restore())
@@ -63,8 +63,8 @@ gulp.task('build', ['html', 'bundle', 'images']);
 
 // Bower helper
 gulp.task('bower', function() {
-    gulp.src('app/bower_components/**/*.js', {base: 'app/bower_components'})
-        .pipe(gulp.dest('dist/bower_components/'));
+	return $.bower()
+			.pipe(gulp.dest('dist/bower_components/'));
 });
 
 // Webpack
