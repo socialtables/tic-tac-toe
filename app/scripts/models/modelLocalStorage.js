@@ -1,12 +1,27 @@
 'use strict';
 
+//var MongoClient = require('mongodb').MongoClient;
+//
+//// Connect to the db
+//MongoClient.connect("mongodb://localhost:27017/tictactoe", function(err, db) {
+//  if(!err) {
+//    console.log("We are connected");
+//  }
+//
+//  db.createCollection('test', {strict: true}, function (err, collection) {});
+//});
+
 var _ = require('underscore');
 //	Modernizr = require('modernizr/modernizr.js');
 
-if (typeof localStorage === "undefined" || localStorage === null) {
-  var LocalStorage = require('node-localstorage').LocalStorage;
-  var localStorage = new LocalStorage('./scratch');
-}
+var localStorage = {
+	getItem: function(key) {
+		return false;
+	},
+	setItem: function(key, value) {
+		return true;
+	}
+};
 
 var createPlayers = function (newPlayerX, newPlayerO) {
     var playerX = newPlayerX || 'Player X';

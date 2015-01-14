@@ -1,51 +1,35 @@
 'use strict';
 
-require('jsdom');
+//require('node-jsx').install({extension: '.jsx'});
 
 var express = require('express'),
+	session = require('express-session'),
+	errorhandler = require('errorhandler'),
 	path = require('path'),
 	React = require('react'),
-	jsdom = require('jsdom').jsdom,
-	serializeDocument = require('jsdom').serializeDocument;
-
-var jquery = require('jquery');//(require('jsdom').jsdom().parentWindow);
-
-require('node-jsx').install({extension: '.jsx'});
-
-var App = require('./app/scripts/App.jsx'),
+	nunjucks = require('nunjucks'),
+	App = require('./build/scripts/App.js'),
     model = require('./app/scripts/models/modelLocalStorage.js'),
 	fs = require('fs');
 
 var app = express();
 
-(function configure () {
-	app.use(express.static(path.join(__dirname, 'dist')));
-//	app.engine('html')
-})();
+app.use(errorhandler());
+app.use(session({secret: 'gogreenbaypackers'}));
 
-//app.get('/scripts/app.js', 'dist/scripts/app.js');
-
-app.get('*', function(req, res) {
-	debugger;
-	fs.readFile('./app/index.html', function(err, indexHTML) {
-		debugger;
-		if (err) {
+app.get('/', function(req, res) {
+	var props = {'model': model};
+	var appHTML = React.renderToString(App(props));
+	nunjucks.render('build/index.html', {bodyContent: appHTML}, function(err, html) {
+		if(err) {
 			throw err;
-		}
-		var doc = jsdom(indexHTML);
-		var $ = jquery(doc.parentWindow);
-//		console.log($('body').html());
-		var props = {'model': model};
-		var appHTML = React.renderToString(App(props));
-//		res.setHeader('Content-Type', 'text/html');
-		$('body').html(appHTML);
-		var html = serializeDocument(doc);
-		fs.writeFile('blaa', html);
-		console.log(html);
+		};
 		res.send(html);
-//		res.send($(indexHTML).find('body').html(appHTML));
 	});
 });
+
+// Below routes
+app.use(express.static(path.join(__dirname, 'dist')));
 
 var server = app.listen(process.env.PORT || 9000, function () {
 	console.log('\nServer ready on port %d\n', server.address().port);

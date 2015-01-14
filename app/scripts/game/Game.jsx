@@ -1,6 +1,6 @@
 var React = require('react'),
-    GameStatus = require('./GameStatus.jsx'),
-    Scoreboard = require('./Scoreboard.jsx'),
+    GameStatus = require('./GameStatus'),
+    Scoreboard = require('./Scoreboard'),
     app = require('./globals'),
     _ = require('underscore');
 

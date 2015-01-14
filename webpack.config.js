@@ -5,28 +5,28 @@ module.exports = {
   cache: true,
   entry: path.resolve(__dirname, 'app/scripts/index.jsx'),
   output: {
-	path: path.resolve(__dirname, 'dist/scripts'),
+	path: path.resolve(__dirname, 'build/test'),
   	filename: 'browser-bundle.js'
   },
   module: {
     loaders: [
       	{
 			test: /\.jsx$/,
-			loader: 'jsx-loader'
+			loader: 'jsx-loader?harmony'
 		},
 		{
 			test: /\.scss$/,
 			loader: "style-loader!css-loader!sass-loader?outputStyle=expanded&" +
 			  "includePaths[]=" +
-				(path.resolve(__dirname, "./dist/bower_components")) + "&" +
+				(path.resolve(__dirname, "./build/bower_components")) + "&" +
 			  "includePaths[]=" +
 				(path.resolve(__dirname, "./node_modules"))
 		}
     ]
   },
   resolve: {
-	  extensions: ['', '.js', '.scss'],
-	  root: [path.join(__dirname, 'dist', 'bower_components')]
+	  extensions: ['', '.js', '.jsx', '.scss', '.json'],
+	  root: [path.join(__dirname, 'build', 'bower_components')]
   },
   plugins: [
 	  new webpack.ResolverPlugin([
