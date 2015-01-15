@@ -24,7 +24,7 @@ module.exports = {
     ]
   },
   resolve: {
-	  extensions: ['', '.js', '.scss']
+	  extensions: ['', '.js', '.scss', '.jsx']
   },
   debug: true,
   devtool: "#inline-source-map"

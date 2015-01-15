@@ -43,27 +43,30 @@ gulp.task('images', function () {
 
 // Clean
 gulp.task('clean', function (cb) {
-    del(['dist/styles', 'dist/images'], cb);
+//    del(['dist/styles', 'dist/images'], cb);
+	return cb(del.sync(['dist']));
 });
 
 // Bundle
-gulp.task('bundle', ['styles', 'bower'], function(){
+gulp.task('bundle', ['styles', 'bower', 'webpack'], function(){
+	var assets = $.useref.assets();
     return gulp.src('./app/*.html')
-               .pipe($.useref.assets())
-               .pipe($.useref.restore())
+               .pipe(assets)
+               .pipe(assets.restore())
                .pipe($.useref())
                .pipe(gulp.dest('dist'));
 });
 
 // Build
-gulp.task('build', ['html', 'bundle', 'images']);
+gulp.task('build', ['html', 'bundle', 'images', 'webpack']);
 
 // Default task
-//gulp.task('default', ['clean', 'build']);
+gulp.task('default', ['clean', 'build']);
 
 // Bower helper
 gulp.task('bower', function() {
-    gulp.src('app/bower_components/**/*.js', {base: 'app/bower_components'})
+//	return $.bower();
+    return gulp.src('app/bower_components/**/*.js', {base: 'app/bower_components'})
         .pipe(gulp.dest('dist/bower_components/'));
 });
 
