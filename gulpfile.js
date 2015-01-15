@@ -2,34 +2,46 @@
 
 var gulp = require('gulp'),
 	del = require('del'),
+	path = require('path'),
+	react = require('gulp-react'),
 	webpackConfig = require('./webpack.config.js');
 
-// Load plugins
+// Loads plugins
 var $ = require('gulp-load-plugins')();
 
-// Styles
-gulp.task('styles', function () {
-    return gulp.src('app/styles/main.scss')
-        .pipe($.rubySass({
-            style: 'expanded',
-            precision: 10,
-//            loadPath: ['app/bower_components']
-            loadPath: process.cwd() + '/app/bower_components'
-        }))
-        .pipe($.autoprefixer('last 1 version'))
-        .pipe(gulp.dest('dist/styles'))
-        .pipe($.size());
+// Copy jsx files to destination and convert to js
+gulp.task('jsx', function () {
+	return gulp.src('app/scripts/**/*.jsx')
+    	// Turn React JSX syntax into regular javascript
+		.pipe(react({harmony: true}))
+		.pipe(gulp.dest('build/scripts/'));
 });
 
-// HTML
+// Bundle jsx files
+gulp.task('webpack', function() {
+	return $.webpack(webpackConfig)
+		// gulp-webpack needs to pipe to dest
+		.pipe(gulp.dest('build/scripts/'));
+});
+
+// Copy js files to destination
+gulp.task('javascript', function () {
+	return gulp.src('app/scripts/**/*.js')
+		.pipe(gulp.dest('build/scripts/'));
+});
+
+// Copy bower files to destination
+gulp.task('bower', function() {
+	return $.bower()
+			.pipe(gulp.dest('build/bower_components/'));
+});
+
 gulp.task('html', function () {
     return gulp.src('app/*.html')
         .pipe($.useref())
-        .pipe(gulp.dest('dist'))
-        .pipe($.size());
+        .pipe(gulp.dest('build'));
 });
 
-// Images
 gulp.task('images', function () {
     return gulp.src('app/images/**/*')
         .pipe($.cache($.imagemin({
@@ -37,63 +49,59 @@ gulp.task('images', function () {
             progressive: true,
             interlaced: true
         })))
-        .pipe(gulp.dest('dist/images'))
-        .pipe($.size());
+        .pipe(gulp.dest('build/images/'));
 });
 
-// Clean
-gulp.task('clean', function (cb) {
-//    del(['dist/styles', 'dist/images'], cb);
-	return cb(del.sync(['dist']));
+// Styles
+gulp.task('styles', function () {
+    return gulp.src('app/styles/main.scss')
+        .pipe($.rubySass({
+            style: 'expanded',
+            precision: 10,
+            loadPath: process.cwd() + '/app/bower_components'
+        }))
+        .pipe($.autoprefixer('last 5 version'))
+        .pipe(gulp.dest('build/styles'));
+});
+
+gulp.task('clean', function(cb) {
+	return cb(del.sync(['build']));
 });
 
 // Bundle
-gulp.task('bundle', ['styles', 'bower', 'webpack'], function(){
+gulp.task('bundle', ['images', 'html', 'styles', 'bower', 'jsx', 'webpack', 'javascript'], function(){
 	var assets = $.useref.assets();
-    return gulp.src('./app/*.html')
+    return gulp.src('app/*.html')
                .pipe(assets)
                .pipe(assets.restore())
                .pipe($.useref())
-               .pipe(gulp.dest('dist'));
+               .pipe(gulp.dest('build'));
 });
-
-// Build
-gulp.task('build', ['html', 'bundle', 'images', 'webpack']);
 
 // Default task
-gulp.task('default', ['clean', 'build']);
-
-// Bower helper
-gulp.task('bower', function() {
-//	return $.bower();
-    return gulp.src('app/bower_components/**/*.js', {base: 'app/bower_components'})
-        .pipe(gulp.dest('dist/bower_components/'));
-});
-
-// Webpack
-gulp.task('webpack', function() {
-	return $.webpack(webpackConfig);
-//	return gulp.src('app/scripts/index.jsx')
-//			.pipe($.webpack(webpackConfig))
-});
-
-gulp.task('json', function() {
-    gulp.src('app/scripts/json/**/*.json', {base: 'app/scripts'})
-        .pipe(gulp.dest('dist/scripts/'));
-});
+gulp.task('default', ['clean', 'bundle']);
 
 // Watch
-gulp.task('watch', ['html', 'bundle'], function () {
-
-    // Watch .json files
-    gulp.watch('app/scripts/**/*.json', ['json']);
+gulp.task('watch', ['bundle'], function () {
+	
+	// Watch .jsx or .js files
+	gulp.watch(['app/scripts/**/*.js', 'app/scripts/**/*.jsx'], ['jsx', 'javascript', 'webpack']);
 
     // Watch .html files
-    gulp.watch('app/*.html', ['html']);
+    gulp.watch('app/**/*.html', ['html']);
 
     // Watch .scss files
     gulp.watch('app/styles/**/*.scss', ['styles']);
 
     // Watch image files
     gulp.watch('app/images/**/*', ['images']);
+
+    // Start up the server and have it reload when anything in the
+    // ./build/ directory changes or the server.js file.
+	$.nodemon({
+		script: 'server.js',
+		watch: ['build', 'server.js'],
+	   	ext: 'js html',
+		nodeArgs: ['--debug']
+	});
 });

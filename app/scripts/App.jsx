@@ -1,7 +1,7 @@
-var React = window.React = require('react'),
-    NewPlayersBtn = require("./buttons/NewPlayersBtn.jsx"),
-    Game = require("./game/Game.jsx"),
-    NewGameBtn = require("./buttons/NewGameBtn.jsx");
+var React = require('react'),
+    NewPlayersBtn = require("./buttons/NewPlayersBtn"),
+    Game = require("./game/Game"),
+    NewGameBtn = require("./buttons/NewGameBtn");
 
 var App = React.createClass({
     handleModalSubmit: function (newPlayerX, newPlayerO) {

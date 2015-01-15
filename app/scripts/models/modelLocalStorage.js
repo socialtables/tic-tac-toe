@@ -37,8 +37,9 @@ var createPlayers = function (newPlayerX, newPlayerO) {
     }
 }
 
+var isNewKey = false;
+
 var Model = (function () {
-    var isNewKey = false;
     return function (key) {
         this.key = key;
         this.wasGameOver = false;

@@ -1,19 +1,18 @@
+'use strict';
+
 var express = require('express'),
-	path = require('path'),
-	React = require('react'),
-	errorhandler = require('errorhandler');
+	errorhandler = require('errorhandler'),
+	path = require('path');
 
 var app = express();
 
 app.use(errorhandler());
-app.use(express.static(path.join(__dirname, 'dist')));
-//app.engine('html');
-
-//app.get('/scripts/app.js', 'dist/scripts/app.js');
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('*', function(req, res) {
-	console.log("Nick error");
-	res.render('dist/index');
+	var str = "This is an error. Check your server.js";
+	console.log(str);
+	res.send(str);
 });
 
 var server = app.listen(process.env.PORT || 9000, function () {
