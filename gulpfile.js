@@ -32,8 +32,8 @@ gulp.task('javascript', function () {
 
 // Copy bower files to destination
 gulp.task('bower', function() {
-	return $.bower()
-			.pipe(gulp.dest('build/bower_components/'));
+    gulp.src('app/bower_components/**/*.js', {base: 'app/bower_components'})
+        .pipe(gulp.dest('build/bower_components/'));
 });
 
 gulp.task('html', function () {
@@ -52,16 +52,21 @@ gulp.task('images', function () {
         .pipe(gulp.dest('build/images/'));
 });
 
-// Styles
-gulp.task('styles', function () {
-    return gulp.src('app/styles/main.scss')
-        .pipe($.rubySass({
-            style: 'expanded',
-            precision: 10,
-            loadPath: process.cwd() + '/app/bower_components'
-        }))
-        .pipe($.autoprefixer('last 5 version'))
-        .pipe(gulp.dest('build/styles'));
+//// Styles
+//gulp.task('styles', function () {
+//    return gulp.src('app/styles/main.scss')
+//        .pipe($.rubySass({
+//            style: 'expanded',
+//            precision: 10,
+//            loadPath: process.cwd() + '/app/bower_components'
+//        }))
+//        .pipe($.autoprefixer('last 5 version'))
+//        .pipe(gulp.dest('build/styles'));
+//});
+
+gulp.task('css', function () {
+	return gulp.src('app/styles/main.css')
+		.pipe(gulp.dest('build/styles'));
 });
 
 gulp.task('clean', function(cb) {
@@ -69,7 +74,7 @@ gulp.task('clean', function(cb) {
 });
 
 // Bundle
-gulp.task('bundle', ['images', 'html', 'styles', 'bower', 'jsx', 'webpack', 'javascript'], function(){
+gulp.task('bundle', ['images', 'html', 'css', 'bower', 'jsx', 'webpack', 'javascript'], function(){
 	var assets = $.useref.assets();
     return gulp.src('app/*.html')
                .pipe(assets)
@@ -91,7 +96,10 @@ gulp.task('watch', ['bundle'], function () {
     gulp.watch('app/**/*.html', ['html']);
 
     // Watch .scss files
-    gulp.watch('app/styles/**/*.scss', ['styles']);
+//    gulp.watch('app/styles/**/*.scss', ['styles']);
+	
+    // Watch .css files
+    gulp.watch('app/styles/**/*.css', ['css']);
 
     // Watch image files
     gulp.watch('app/images/**/*', ['images']);
