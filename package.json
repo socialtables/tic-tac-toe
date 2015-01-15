@@ -9,7 +9,7 @@
     "npm": "2.1.x"
   },
   "scripts": {
-	"start": "gulp watch",
+    "start": "gulp watch",
     "webpack": "webpack --progress --colors --watch --display-error-details"
   },
   "dependencies": {
@@ -31,11 +31,13 @@
     "gulp-imagemin": "~1.0.1",
     "gulp-load-plugins": "~0.7.0",
     "gulp-nodemon": "^1.0.5",
+    "gulp-react": "^2.0.0",
     "gulp-ruby-sass": "~0.7.1",
     "gulp-useref": "^1.1.1",
     "gulp-util": "^3.0.2",
     "gulp-webpack": "^1.1.2",
     "jsx-loader": "^0.12.2",
-    "jsxhint": "^0.8.1"
+    "jsxhint": "^0.8.1",
+    "underscore": "^1.7.0"
   }
 }
