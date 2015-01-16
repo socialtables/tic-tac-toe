@@ -52,7 +52,8 @@ gulp.task('images', function () {
         .pipe(gulp.dest('build/images/'));
 });
 
-//// Styles
+// Commented out bc gulp-ruby-sass doesn't work well on Heroku
+// Styles
 //gulp.task('styles', function () {
 //    return gulp.src('app/styles/main.scss')
 //        .pipe($.rubySass({

@@ -10,7 +10,7 @@ app.use(errorhandler());
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('*', function(req, res) {
-	var str = "This is an error. Check your server.js";
+	var str = "This is could be an error. Check your server.js";
 	console.log(str);
 	res.send(str);
 });
