@@ -1,0 +1,194 @@
+$icon-font-path: "/bower_components/bootstrap-sass-official/assets/fonts/";
+
+@import "bootstrap-sass-official/assets/stylesheets/bootstrap";
+
+$myBlue: #262626; //myBlue which is actually blueish black
+
+.browsehappy {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+/* Space out content a bit */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Custom page header */
+.header {
+    border-bottom: 1px solid #e5e5e5;
+
+    /* Make the masthead heading the same height as the navigation */
+    h3 {
+        margin-top: 0;
+        margin-bottom: 0;
+        line-height: 40px;
+        padding-bottom: 19px;
+    }
+}
+
+h1 {
+    margin: 0;
+}
+
+.btn {
+    padding: 7px 12px;
+}
+.btn-new-player {
+	position: absolute;
+    right: 15px;
+}
+
+.footer {
+    padding-top: 19px;
+    color: #777;
+    border-top: 1px solid #262626;
+}
+
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+.modal {
+    .modal-dialog {
+        width: 300px;
+        margin: 30px auto;
+    }
+    .no-padding-left {
+        padding-left: 0;
+    }
+    .form-horizontal .form-group {
+        margin-right: 0;
+    }
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+    .btn {
+        font-size: 21px;
+        padding: 14px 24px;
+    }
+    div.scoreboard {
+        margin: 0 auto;
+        height: 80px;
+        width: 35%;
+        @include box-shadow(3px);
+        border: 3px $myBlue solid;
+        overflow: hidden;
+        div.pull-left {
+            border-right: 3px solid $myBlue;
+        }
+        div.scoreboard-player {
+            color: $myBlue;
+            height: 100%;
+            width: 50%;
+            div:first-child {
+                font-weight: bold;
+                border-bottom: 3px solid $myBlue;
+            }
+            div:nth-child(2) {
+                color: $btn-success-bg;
+                height: 100%;
+                font-size: 38px;
+            }
+        }
+    }
+    .game {
+        margin: 5px;
+        background-color: rgba(101, 106, 166, 0.18);
+        div.row {
+            height: 100px;
+            position: relative;
+            div.cell {
+                height: 100%;
+            }
+        }
+        height: 300px;
+        max-height: 300px;
+        .border-top {
+            border-bottom: solid 3px black;
+            position: absolute;
+            top: 100%;
+            bottom: 0%;
+            left: 25%;
+            right: 25%;
+            z-index: 100;
+        }
+        .center {
+            border-left: solid 3px black;
+        }
+        .right {
+            border-left: solid 3px black;
+        }
+        .cell div.pointer {
+            width: 87%;
+            height: 82%;
+        }
+        .cell div.pointer-on {
+            cursor: pointer;
+            z-index: 1;
+        }
+        .cell div {
+            width: 100%;
+            height: 100%;
+
+            position: absolute;
+            top:0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+
+            margin: auto;
+        }
+        .cell img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+/* Supporting marketing content */
+.marketing {
+    margin: 40px 0;
+    p + h4 {
+        margin-top: 28px;
+    }
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    .container {
+        max-width: 730px;
+    }
+
+    /* Remove the padding we set earlier */
+    .header,
+    .marketing,
+    .footer {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Space out the masthead */
+    .header {
+        margin-bottom: 30px;
+    }
+
+    /* Remove the bottom border on the jumbotron for visual effect */
+    .jumbotron {
+        border-bottom: 0;
+    }
+}
