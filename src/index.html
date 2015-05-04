@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Onesien - Tic Tac Toe</title>
+    
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.12.1/react.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.12.1/JSXTransformer.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    
+    <style type="text/css">
+
+      #content {
+          margin: 0px auto;
+          width: 500px;
+      }
+
+      #game {
+          width: 300px;
+          height: 300px;
+          padding: 0;
+          margin: 0;
+          float: left;
+          outline: 1px solid black;
+      }
+
+      .tile {
+          width: 100px;
+          height: 100px;
+          padding: 0;
+          margin: 0;
+          float: left;
+          outline: 1px solid black;
+      }
+
+      .highlight{
+         background-color: green;       
+      }
+    </style>
+  </head>
+  <body>
+  	<h1>Lets Play!</h1>
+    <div id="content"></div>
+    <script type="text/jsx" src="application.js"></script>
+  </body>
+</html>
